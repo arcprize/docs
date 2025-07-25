@@ -1,0 +1,36 @@
+---
+title: "AgentOps Template"
+sidebarTitle: "AgentOps"
+description: "AgentOps Template"
+icon: "bot"
+---
+
+[AgentOps](https://agentops.ai) provides observability and debugging tools for AI agents. These templates are designed to help you get the most out of their platform.
+
+### ReasoningAgent
+
+This template provides a reasoning agent that maintains a history of its actions and observations to build a hypothesis about the game's rules. It's fully integrated with AgentOps for detailed tracing and debugging, giving you more information about your agent's performance.
+
+To run this agent:
+
+```bash
+uv run main.py --agent=reasoningagent --game=ls20
+```
+
+[Source File](https://github.com/arcprize/ARC-AGI-3-Agents/blob/main/agents/templates/reasoning_agent.py)
+
+### AgentOps Tracing
+
+When you install the `agentops` package and set your API key, all agents are automatically decorated with `@trace_agent_session`. This streams detailed traces of your agent's execution to your AgentOps dashboard.
+
+To enable tracing:
+
+```bash
+uv sync --extra agentops
+```
+
+And add your API key to your `.env` file:
+
+```bash
+AGENTOPS_API_KEY="your_agentops_api_key"
+```

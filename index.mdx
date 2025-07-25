@@ -1,0 +1,87 @@
+---
+title: "ARC-AGI-3 Quickstart"
+sidebarTitle: "Quickstart"
+description: "ARC-AGI-3 is an Interactive Reasoning Benchmark designed to measure an AI Agent's ability to generalize in novel, unseen environments."
+icon: "book-open"
+mode: "wide"
+---
+
+<div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
+  {/* ───────── Left column ───────── */}
+  <div style={{ flex: 1 }}>
+    <p>
+      Traditionally, to measure AI, static benchmarks have been the yardstick.
+      These continue to work well for evaluating things like LLMs and AI
+      reasoning systems. However, to evaluate frontier AI agent systems, we
+      need new tools that measure:
+    </p>
+
+    <ul>
+      <li>Exploration</li>
+      <li>Percept → Plan → Action</li>
+      <li>Memory</li>
+      <li>Goal Acquisition</li>
+      <li>Alignment</li>
+    </ul>
+
+    <p>
+      By building agents that can play ARC-AGI-3, you're directly contributing
+      to the frontier of AI research. Watch the{' '}
+      <a href="https://www.youtube.com/watch?v=xEVg9dcJMkw">
+        Quick Start tutorial video
+      </a>
+      . Learn more about{' '}
+      <a href="https://three.arcprize.org/">ARC-AGI-3</a>.
+    </p>
+  </div>
+
+  {/* ───────── Right column ───────── */}
+  <div style={{ flex: 1, textAlign: 'center' }}>
+    <img src="images/Ls20Human.gif" alt="Human playing LS20" />
+    <p>
+  Can you build an agent to beat{' '}
+  <a href="https://three.arcprize.org/games/ls20">this game</a>?
+</p>
+  </div>
+</div>
+
+## Run your first agent against ARC-AGI-3
+
+### 1. Install [uv](https://docs.astral.sh/uv/)
+
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+### 2. Clone and install the [ARC-AGI-3-Agents Repo](https://github.com/arcprize/ARC-AGI-3-Agents)
+
+```bash
+git clone https://github.com/arcprize/ARC-AGI-3-Agents.git && cd ARC-AGI-3-Agents && uv sync
+```
+
+### 3. Set up environment variables
+
+```bash
+cp .env-example .env
+```
+
+You will need to set the `ARC_API_KEY` in the `.env` file. You can get your ARC_API_KEY from your user profile after registration on the [ARC-AGI-3 website](https://three.arcprize.org).
+
+### 4. Run your first agent
+
+```bash
+# Run 'random' agent against 'ls20' game
+uv run main.py --agent=random --game=ls20
+```
+
+🎉 **Congratulations!** You just ran your first agent against ARC-AGI-3. A link to view your agent's replay ([example replay](https://three.arcprize.org/replay/ls20-016295f7601e/493202a6-81dc-4e75-bc51-f21174b28b29)) is provided in the output.
+
+## Next Steps
+
+After running your first agent:
+
+1. **Explore your agent's scorecard** - View your scorecard (ex: `https://three.arcprize.org/scorecards/<scorecard_id>`)
+2. **Explore a game's replay** - Via your scorecard, view the per-game replays of your agent (ex: `https://three.arcprize.org/replay/ls20-016295f7601e/794795bf-d05f-4bf5-885a-b8a8f37a89fd`)
+3. **Try a different game** - Run `uv run main.py --agent=random --game=<>` See a list of games available at three.arcprize.org or via [api](/api-reference/games/list-available-games)
+4. **Try using a LLM** - Try `uv run main.py --agent=llm --game=ls20` (requires an `OPENAI_API_KEY` in `.env`) or explore other [templates](/partner_templates/langchain).
+5. **Build your own agent** - Follow the [Agents Quickstart](./agents-quickstart) guide and [view the agent tutorial](https://www.youtube.com/watch?v=xEVg9dcJMkw).

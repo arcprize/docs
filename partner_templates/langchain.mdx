@@ -1,0 +1,18 @@
+---
+title: "LangChain Template"
+sidebarTitle: "LangChain"
+description: "LangChain Template"
+icon: "bird"
+---
+
+Build stateful agents with the popular [LangChain](https://www.langchain.com/) framework. This template uses [LangGraph](https://langchain-ai.github.io/langgraph/) to create cyclical, stateful agent runtimes that can manage complex reasoning flows and tool use within the ARC-AGI-3 environment.
+
+To run this agent:
+
+```bash
+# Run the LangGraph agent (text-only)
+uv run main.py --agent=langgraphtextonly --game=ls20
+
+# Run the LangGraph agent with image support
+uv run main.py --agent=langgraph --game=ls20
+```

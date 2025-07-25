@@ -1,0 +1,23 @@
+---
+title: "Rate Limits"
+description: "Limiting RPM for your agents"
+icon: "activity"
+---
+
+The ARC-AGI API is currently free to use during its research preview. To prevent abuse and ensure fair access, we have implemented rate limits with an exponential backoff mechanism.
+
+These limits help maintain system stability by throttling excessive requests. If you encounter rate limiting, your requests will receive a backoff response, requiring you to wait increasingly longer periods before retrying.
+
+## Requesting Limit Increases
+
+We are open to discussing increases in rate limits, particularly for researchers and teams requiring higher throughput.
+
+If you need elevated limits, please email us at team@arcprize.org with the subject line "Increase Rate Limits" to initiate a conversation.
+
+## Navigating Rate Limits
+
+If you've managed to hit a rate limit, you'll see a standard `429` response.
+
+```json
+{"error":"RATE_LIMIT_EXCEEDED","message":"rate limit has been exceeded"}
+```

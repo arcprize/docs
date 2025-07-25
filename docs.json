@@ -1,0 +1,115 @@
+{
+    "$schema": "https://mintlify.com/docs.json",
+    "theme": "mint",
+    "name": "ARC-AGI-3 Docs",
+    "colors": {
+        "primary": "#ff0000"
+    },
+    "appearance": {
+        "default": "dark"
+    },
+    "favicon": "images/favicon.png",
+    "icons": {
+        "library": "lucide"
+    },
+    "contextual": {
+        "options": [
+            "copy",
+            "view",
+            "chatgpt",
+            "claude"
+        ]
+    },
+    "logo": {
+        "light": "images/arc-agi-3-light.png",
+        "dark": "images/arc-agi-3-dark.png",
+        "href": "https://arcprize.org"
+    },
+    "navigation": {
+        "tabs": [
+            {
+                "tab": "Documentation",
+                "groups": [
+                    {
+                        "group": "Get Started",
+                        "pages": [
+                            "index",
+                            "swarms"
+                        ]
+                    },
+                    {
+                        "group": "Games",
+                        "pages": [
+                            "games",
+                            "scorecards",
+                            "actions",
+                            "recordings",
+                            "rate_limits"
+                        ]
+                    },
+                    {
+                        "group": "Agents",
+                        "pages": [
+                            "agents-quickstart",
+                            "llm_agents",
+                            {
+                                "group": "Partner Templates",
+                                "icon": "copy",
+                                "pages": [
+                                    "partner_templates/agentops",
+                                    "partner_templates/huggingface",
+                                    "partner_templates/anthropic"
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "group": "Resources",
+                        "pages": [
+                            "contributing"
+                        ]
+                    }
+                ]
+            },
+            {
+                "tab": "API Reference",
+                "openapi": "arc3v1.yaml"
+            },
+            {
+                "tab": "ARCPrize.org",
+                "href": "https://arcprize.org"
+            }
+        ],
+        "global": {
+            "anchors": [
+                {
+                    "anchor": "ARC-AGI-3 Overview",
+                    "href": "https://arcprize.org/arc-agi/3",
+                    "icon": "gamepad"
+                },
+                {
+                    "anchor": "Play ARC-AGI-3",
+                    "href": "https://three.arcprize.org",
+                    "icon": "gamepad"
+                },
+                {
+                    "anchor": "Blog",
+                    "href": "https://arcprize.org/blog",
+                    "icon": "newspaper"
+                },
+                {
+                    "anchor": "Community",
+                    "href": "https://discord.gg/9b77dPAmcA",
+                    "icon": "discord"
+                }
+            ]
+        }
+    },
+    "footer": {
+        "socials": {
+            "github": "https://github.com/arcprize/docs",
+            "discord": "https://discord.gg/9b77dPAmcA",
+            "twitter": "https://twitter.com/arcprize"
+        }
+    }
+}

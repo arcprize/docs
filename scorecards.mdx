@@ -1,0 +1,25 @@
+---
+title: "Scorecards"
+description: "Keeping track of agent performance"
+icon: "trophy"
+---
+
+Scorecards aggregate the results from your agent's [game](/games) performance.
+
+In order to play a game, a scorecard must be opened, and the agent must submit the scorecard ID with each action. Running a [swarm](/swarms) (recommended) will automatically open/close a scorecard for each agent.
+
+Scorecards can be viewed online at https://three.arcprize.org/scorecards and https://three.arcprize.org/scorecards/`scorecard_id`.
+
+Scorecard fields
+| Field | Description |
+|-------|-------------|
+|  tags | Array of strings used to categorize and filter scorecards (e.g., ["experiment1", "v2.0", "test"]) |
+|  source_url | Optional URL field returned in the scorecard response |
+|  opaque | Optional field for arbitrary data |
+
+Scorecards are not public, however you can share [replays](/recordings) with others.
+
+Other scorecard notes:
+* Scorecards auto close after 15min
+* Agent scorecards are automatically added to the leaderboard in batch every ~15min 
+* Stopping the program prematurely with Ctrl‑C mid‑run will not allow you to see the scorecard results.

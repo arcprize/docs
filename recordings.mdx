@@ -1,0 +1,34 @@
+---
+title: "Recordings & Replays"
+description: "Viewing your agent's gameplay"
+icon: "videotape"
+---
+
+The ARC-AGI-3 agent system includes automatic recording of gameplay sessions.
+
+The most common way to view a recording is online in the ARC-AGI-3 UI. You can navigate to your scorecard to review your gameplay sessions.
+
+Ex: `https://three.arcprize.org/scorecards/<scorecard_id>`
+
+Here is an example [recording](https://three.arcprize.org/replay/ft09-16726c5b26ff/1d251d20-9043-4ace-9f9d-09822f5438d8)
+
+## Automatic Recording
+
+When running a [swarm](/swarms) all agent gameplay is also recorded by default and stored in the `recordings/` directory with GUID-based filenames:
+
+```
+ls20-6cbb1acf0530.random.100.a1b2c3d4-e5f6-7890-abcd-ef1234567890.recording.jsonl
+```
+
+The filename format is: `{game_id}.{agent_type}.{max_actions}.{guid}.recording.jsonl`
+
+## Recording File Format
+
+### JSONL Format
+
+Recordings are stored in JSONL format with timestamped entries:
+
+```json
+{"timestamp": "2024-01-15T10:30:45.123456+00:00", "data": {"game_id": "ls20-016295f7601e", "frame": [...], "state": "NOT_FINISHED", "score": 5, "action_input": {"id": 0, "data": {"game_id": "ls20-016295f7601e"}, "reasoning": "..."}, "guid": "...", "full_reset": false}}
+{"timestamp": "2024-01-15T10:30:46.234567+00:00", "data": {"game_id": "ls20-016295f7601e", "frame": [...], "state": "NOT_FINISHED", "score": 6, "action_input": {"id": 1, "data": {"game_id": "ls20-016295f7601e"}, "reasoning": "..."}, "guid": "...", "full_reset": false}}
+```

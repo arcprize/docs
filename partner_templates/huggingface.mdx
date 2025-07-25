@@ -1,0 +1,23 @@
+---
+title: "HuggingFace Template"
+sidebarTitle: "HuggingFace"
+description: "HuggingFace Template"
+icon: "hand"
+---
+
+These templates provide a great starting point for building agents with the [HuggingFace](https://huggingface.co/) ecosystem. Check out the [smolagents documentation](https://huggingface.co/docs/smolagents/index) to learn more.
+
+- **`SmolCodingAgent`**: A text-based agent that uses a code-generating model to reason about the game and execute actions as Python code.
+- **`SmolVisionAgent`**: A multimodal agent that processes game frames as images, allowing it to "see" the game state.
+
+To run these agents, use the following commands:
+
+```bash
+# Run the text-based coding agent
+uv run main.py --agent=smolcodingagent --game=ls20
+`
+# Run the vision-based agent
+uv run main.py --agent=smolvisionagent --game=ls20
+```
+
+[Source File](https://github.com/arcprize/ARC-AGI-3-Agents/blob/main/agents/templates/smolagents.py)
