@@ -21,8 +21,8 @@
         ]
     },
     "logo": {
-        "light": "images/arc-agi-3-light.png",
-        "dark": "images/arc-agi-3-dark.png",
+        "light": "images/ap-logo-stacked-margins_light.png",
+        "dark": "images/ap-logo-stacked-margins_dark.png",
         "href": "https://arcprize.org"
     },
     "navigation": {
@@ -74,36 +74,8 @@
             {
                 "tab": "API Reference",
                 "openapi": "arc3v1.yaml"
-            },
-            {
-                "tab": "ARCPrize.org",
-                "href": "https://arcprize.org"
             }
-        ],
-        "global": {
-            "anchors": [
-                {
-                    "anchor": "ARC-AGI-3 Overview",
-                    "href": "https://arcprize.org/arc-agi/3",
-                    "icon": "gamepad"
-                },
-                {
-                    "anchor": "Play ARC-AGI-3",
-                    "href": "https://three.arcprize.org",
-                    "icon": "gamepad"
-                },
-                {
-                    "anchor": "Blog",
-                    "href": "https://arcprize.org/blog",
-                    "icon": "newspaper"
-                },
-                {
-                    "anchor": "Community",
-                    "href": "https://discord.gg/9b77dPAmcA",
-                    "icon": "discord"
-                }
-            ]
-        }
+        ]
     },
     "footer": {
         "socials": {
