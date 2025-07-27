@@ -43,8 +43,7 @@
                             "games",
                             "scorecards",
                             "actions",
-                            "recordings",
-                            "rate_limits"
+                            "recordings"
                         ]
                     },
                     {
@@ -72,8 +71,16 @@
                 ]
             },
             {
-                "tab": "API Reference",
-                "openapi": "arc3v1.yaml"
+                "tab": "API Guide",
+                "openapi": "arc3v1.yaml",
+                "groups": [
+                    {
+                        "group": "Using the API",
+                        "pages": [
+                            "rate_limits"
+                        ]
+                    }
+                ]
             }
         ]
     },

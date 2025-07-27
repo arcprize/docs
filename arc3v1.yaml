@@ -370,7 +370,7 @@ paths:
   /api/scorecard/open:
     post:
       tags: [Scorecards]
-      summary: Open a scorecard (begin tracked run)
+      summary: Open scorecard
       description: |
         Creates a new scorecard to aggregate statistics across one or more
         plays. The server returns a `card_id`, which must be included in all
@@ -416,7 +416,7 @@ paths:
   /api/scorecard/close:
     post:
       tags: [Scorecards]
-      summary: Close a scorecard (finish run and aggregate statistics)
+      summary: Close scorecard
       description: |
         Finalises a previously opened scorecard, locking its data and
         returning the aggregate results.  
@@ -474,7 +474,7 @@ paths:
   /api/scorecard/{card_id}:
     get:
       tags: [Scorecards]
-      summary: Retrieve a scorecard
+      summary: Retrieve scorecard
       description: |
         Returns the current (or final) statistics for the specified
         scorecard.  
@@ -520,7 +520,7 @@ paths:
   /api/scorecard/{card_id}/{game_id}:
     get:
       tags: [Scorecards]
-      summary: Retrieve a scorecard filtered to one game
+      summary: Retrieve scorecard (one game)
       description: |
         Returns the scorecard statistics **limited to a single game**.
         Only the entry matching `game_id` is present in `cards`; all other
@@ -584,7 +584,7 @@ paths:
   /api/cmd/RESET:
     post:
       tags: [Commands]
-      summary: Start or reset a game instance and receive the first frame
+      summary: Start or reset game instance
       description: |
         Creates a new game session **or** resets an existing one,
         depending on the presence of `guid` in the request body:
