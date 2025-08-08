@@ -27,3 +27,11 @@ When playing games manually in the ARC-AGI-3 UI, you can use these keyboard shor
 | **Arrow Keys + F** | `↑` | `↓` | `←` | `→` | `F` | Mouse Click |
 
 All control schemes support mouse clicking for ACTION6 (coordinate-based actions). Choose whichever scheme feels most comfortable for your playstyle.
+
+### Available Actions
+
+Each game explicitly defines the set of available actions that can be used within that game. This approach ensures clarity for both human and AI participants by making it clear which actions are permitted, thereby reducing confusion. In the human-facing UI, available actions are visually highlighted or dismissed to provide the same affordance.
+
+For each action taken, the metadata of the returned frame will indicate which actions are available. Agents may use this information to narrow the action space and develop effective strategies for completing the game.
+
+Note: Action 6 does not provide explicit X/Y coordinates for active areas. If Action 6 is available, only its availability will be indicated, without specifying which coordinates are active.

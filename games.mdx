@@ -29,6 +29,15 @@ Game IDs are formatted as `<game_name>`-`<version>`.
 - **Cell Values:** Integer values 0-15 representing different states/colors
 - **Coordinate System:** (0,0) at top-left, (x,y) format
 
+### Game Available Actions
+Each game provides an explicit set of actions that an agent can take. Actions available vary per game.
+
+Typically, the available actions include:
+* Actions 1–4: ex: move up, down, left, or right
+* Action 6: A complex action (if supported by the game)
+
+To learn more about each action and what it does, please visit the [Actions](/actions).
+
 ## Running a Full Playtest
 
 To run a complete playtest, you'll need to integrate your agent with scorecard management and the game loop. This is what happens "under the hood" when you run commands like `uv run main.py --agent=random --game=ls20` (from the [Quick Start](./quick-start.md)). Below is pseudocode for the key steps. For a ready-to-use implementation, see the [Swarms](./swarms.md) guide—which can automate this for you across multiple games.
