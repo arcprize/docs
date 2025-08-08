@@ -7,12 +7,38 @@ icon: "bird"
 
 Build stateful agents with the popular [LangChain](https://www.langchain.com/) framework. This template uses [LangGraph](https://langchain-ai.github.io/langgraph/) to create cyclical, stateful agent runtimes that can manage complex reasoning flows and tool use within the ARC-AGI-3 environment.
 
-To run this agent:
+## LangGraph Templates
+
+### Multi-Modal
+
+```bash
+# Run the LangGraph agent with image support
+uv run main.py --agent=langgraph --game=ls20
+```
+
+### Text only
 
 ```bash
 # Run the LangGraph agent (text-only)
 uv run main.py --agent=langgraphtextonly --game=ls20
+```
 
-# Run the LangGraph agent with image support
-uv run main.py --agent=langgraph --game=ls20
+### Random Agent
+
+Created by Anusheel Bhushan ([@anusheel](https://github.com/anusheel)), Burak Akkaya ([@bakkaya-plank](https://github.com/bakkaya-plank)), Sophia Willows ([@sophiabits](https://github.com/sophiabits)) of [Plank](https://www.joinplank.com/).
+
+```bash
+# Run the LangGraph random agent
+uv run main.py --agent=langgraphrandom --game=ls20
+```
+
+### Advanced Agent
+
+A more advanced template than LangGraph Random Agent for people to build upon. Uses a variety of different tools, and has support for making long-term observations which persist between runs.
+
+Created by Anusheel Bhushan ([@anusheel](https://github.com/anusheel)), Burak Akkaya ([@bakkaya-plank](https://github.com/bakkaya-plank)), Sophia Willows ([@sophiabits](https://github.com/sophiabits)) of [Plank](https://www.joinplank.com/).
+
+```bash
+# Run the LangGraph random agent
+uv run main.py --agent=langgraphrandom --game=ls20
 ```
