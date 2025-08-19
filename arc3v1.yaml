@@ -1050,3 +1050,67 @@ paths:
             • `x` or `y` outside the 0-63 range
         '401':
           description: Missing or invalid **X-API-Key** header.
+
+/api/cmd/ACTION7:
+    post:
+      tags: [Commands]
+      summary: Execute simple action 5
+      description: |
+        Issues **ACTION 7** to the specified game session.  
+        This is a single-parameter command (no X/Y coordinates): 
+        ACTION7 will always be an undo action for games that support it.
+
+        The request must include:
+        • `game_id` — which game to act on  
+        • `guid` — the active session identifier returned from RESET  
+
+        An optional `reasoning` JSON blob (≤ 16 KB) can be attached for
+        audit or research purposes.
+
+        A successful call returns the next visual frame(s) and updated
+        score/state.
+      operationId: action7
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        description: Game/session identifiers plus optional reasoning data.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SimpleActionCommand'
+            examples:
+              action:
+                value:
+                  game_id: ls20-016295f7601e
+                  guid: 2fa5332c-2e55-4825-b5c5-df960d504470
+                  reasoning:
+                    policy: "π_left"
+      responses:
+        '200':
+          description: Frame returned after executing the action.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FrameResponse'
+              examples:
+                frame:
+                  value:
+                    game_id: ls20-016295f7601e
+                    guid: 2fa5332c-2e55-4825-b5c5-df960d504470
+                    frame:
+                      - [[0,0,1,…],[…]]   # truncated
+                    state: NOT_FINISHED
+                    score: 3
+                    win_score: 254
+                    action_input:
+                      id: 7
+                    available_actions: [1, 2, 3, 4, 7]
+        '400':
+          description: |
+            Bad request - possible causes:  
+            • Unknown `game_id` or invalid format  
+            • `guid` not found or does not belong to `game_id`  
+            • `reasoning` field exceeds 16 KB or is malformed
+        '401':
+          description: Missing or invalid **X-API-Key** header.
