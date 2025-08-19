@@ -1051,7 +1051,7 @@ paths:
         '401':
           description: Missing or invalid **X-API-Key** header.
 
-/api/cmd/ACTION7:
+  /api/cmd/ACTION7:
     post:
       tags: [Commands]
       summary: Execute simple action 5
