@@ -1054,7 +1054,7 @@ paths:
   /api/cmd/ACTION7:
     post:
       tags: [Commands]
-      summary: Execute simple action 5
+      summary: Execute simple action 7
       description: |
         Issues **ACTION 7** to the specified game session.  
         This is a single-parameter command (no X/Y coordinates): 
