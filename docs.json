@@ -43,7 +43,9 @@
                             "games",
                             "scorecards",
                             "actions",
-                            "recordings"
+                            "recordings",
+                            "add_game",
+                            "edit_games"
                         ]
                     },
                     {
