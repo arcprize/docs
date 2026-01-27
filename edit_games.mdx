@@ -1,0 +1,244 @@
+---
+title: "Editing ARC Games"
+description: "A guide to modifying games in ARC-AGI-3 Environments"
+---
+## Project Setup
+
+### Environment Configuration
+
+Game files are stored in an environments directory. Configure this in your `.env` file:
+
+```dotenv
+environments_dir = my_environments
+```
+
+The default environments directory is `environment_files` in the project root.
+
+### Directory Structure
+
+The environments follow this directory structure:
+
+```
+ARC-AGI-3-Environments/
+└── environment_files/
+    └── ls20/
+        └── <version>/
+            ├── ls20.py      # Main game file
+            └── metadata.json      # Game metadata
+```
+### Creating a New Version
+
+To create a new version of an existing game:
+
+1. **Create a new version folder** in the game directory:
+   ```
+   environment_files/ls20/v2/
+   ```
+
+2. **Copy and modify the game file** (`ls20.py`) with your changes
+
+3. **Copy and modify the metadata.json** with the new version:
+```json
+{
+  "game_id": "ls20-v2",
+  "default_fps": 5,
+  "local_dir": "environment_files\\ls20\\v2",
+}
+   ```
+Each game version requires a `metadata.json` file:
+
+| Field | Description |
+|-------|-------------|
+| `game_id` | Unique identifier in format `{4 character game-id}-{version}` |
+| `default_fps` | Frames per second for playback |
+| `baseline_actions` | Array of average action counts per level of baseline performance |
+| `tags` | Optional tags for categorization |
+| `local_dir` | Relative path to game directory |
+
+4. **Test the new version** using ARC-AGI-3-Environments:
+   ```python
+   from arcagi3 import ARCAGI3
+
+   # Initialize the ARC-AGI-3 client
+   arc = ARCAGI3()
+
+   # Create an environment with terminal rendering
+   env = arc.make("ls20-v2", render_mode="terminal")
+   ```
+---
+## Editing the Game File
+
+The main game logic resides in `game-id.py` and game-id is a  Unique 4-character identifier starting with a letter. 
+This file contains:
+
+- **`sprites` dictionary** - Defines all sprite templates with pixel arrays and properties
+- **`levels` array** - Contains `Level()` objects with sprite placements and configuration
+- **Game class** - Extends `ARCBaseGame` and implements gameplay mechanics and logic
+```python
+# Typical structure of game-id.py
+
+from arcengine import ARCBaseGame, Camera, GameAction, Level, Sprite
+
+# Sprite definitions
+sprites = {
+    "Player": Sprite(pixels=[...], name="Player", ...),
+    "Obstacle": Sprite(pixels=[...], name="Obstacle", ...),
+    # ...
+}
+
+# Level definitions
+levels = [
+    Level(sprites=[...], grid_size=(64, 64), data={...}),
+    Level(sprites=[...], grid_size=(64, 64), data={...}),
+    # ...
+]
+
+# Game class
+class Game-id(ARCBaseGame):
+    def __init__(self) -> None:
+        # Initialize camera, UI, game state
+        ...
+    
+    def on_set_level(self, level: Level) -> None:
+        # Called when a level loads - setup level-specific state
+        ...
+    
+    def step(self) -> None:
+        # Main game logic - handle actions, collisions, win/lose conditions
+        ...
+        self.complete_action()
+```
+
+---
+
+## Editing Existing Sprites
+
+### Modifying Sprite Pixels
+
+To change an existing sprite's appearance, edit its pixel array directly in the `sprites` dictionary:
+
+This sprite in `ls20.py` now uses colors 8 and 10 instead of 9 and 12.
+
+```python
+sprites = {
+    "Player": Sprite(
+        pixels=[
+            [10, 10, 10, 10, 10],
+            [10, 10, 10, 10, 10],
+            [8, 8, 8, 8, 8],
+            [8, 8, 8, 8, 8],
+            [8, 8, 8, 8, 8],
+        ],
+        name="Player",
+        visible=True,
+        collidable=True,
+        tags=["Player"],
+    ),
+}
+```
+ARCEngine uses a 16-color palette (0-15) plus -1 for transparent and -2 for transparent and collidable.
+
+### Editing Sprites in Level Definitions
+
+When sprites are placed in levels, you can modify them inline:
+
+```python
+Level(
+    sprites=[
+        # Edit position
+        sprites["Player"].clone().set_position(29, 35),
+        
+        # Edit colors
+        sprites["Energy"].clone().set_position(15, 16).color_remap(None, 12),
+        
+        # Edit rotation
+        sprites["Rotate"].clone().set_position(49, 45).set_rotation(90),
+    ],
+    # ...
+)
+```
+---
+## Additional Info
+
+### Level Data
+
+The `data` dictionary stores level-specific configuration. This will vary for every game.
+
+```python
+data={
+    # Energy/steps
+    "StepCounter": 30,
+    
+    # Goal configuration (single value)
+    "GoalType": 5,
+    "GoalColor": 9,
+    
+    # Multiple goals
+    "GoalTypes": [5, 0, 2],
+    "GoalColors": [9, 8, 14],
+    
+    # Feature flags
+    "FogOfWar": False
+
+    # Custom game data
+    "StartingItems": ["item-1", "item-2"],
+    "AnimationDelay": 3,
+}
+```
+
+
+level data is accessed in the game class:
+
+```python
+step_count = self.current_level.get_data("StepCounter")
+fog_enabled = self.current_level.get_data("FogOfWar")
+```
+---
+## Other Techniques
+
+### Dynamic Sprite Addition/Removal
+
+```python
+# Add sprite during gameplay
+new_sprite = sprites["Energy"].clone().set_position(x, y)
+self.current_level.add_sprite(new_sprite)
+
+# Remove sprite
+self.current_level.remove_sprite(some_sprite)
+```
+
+### Querying Sprites
+
+```python
+# Get sprites by tag
+players = self.current_level.get_sprites_by_tag("Player")
+
+# Get sprite at position
+sprite = self.current_level.get_sprite_at(x, y)
+
+# Get sprites by name
+obstacles = self.current_level.get_sprites_by_name("Obstacle")
+```
+
+### Animation Pattern
+
+For multi-frame effects, delay `complete_action()`:
+
+```python
+def step(self) -> None:
+    if self.animating:
+        self.animation_frame += 1
+        if self.animation_frame >= self.animation_length:
+            self.animating = False
+            self.complete_action()
+        return  # Don't complete action yet
+    
+    # Normal game logic...
+    self.complete_action() 
+```
+
+Note the game loop keeps calling `step()` until `complete_action()` is called.
+
+## Further Reading
+
+For more detailed information refer to the **ARC Engine Documentation**.
