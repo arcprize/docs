@@ -19,9 +19,9 @@ Create the following structure:
 ```
 ARC-AGI-3-Environments/
 └── environment_files/
-    └── ab12/
-        └── v1/
-            ├── ab12.py
+    └── <game-id>/
+        └── <version>/
+            ├── <game-id>.py
             └── metadata.json
 ```
 
@@ -39,26 +39,20 @@ Create `metadata.json`:
 ---
 
 ## Game File Structure
-
-The game file (`ab12.py`) follows this structure:
-
-```python
-# 1. Imports
-from arcengine import ARCBaseGame, Camera, GameAction, Level, Sprite
-
-# 2. Sprite definitions
-sprites = { }
-
-# 3. Level definitions
-levels = [ ]
-
-# 4. Constants
-BACKGROUND_COLOR = 0
-
-# 5. Game class
-class Ab12(ARCBaseGame):
-    ...
-```
+<div style={{marginTop: '-1.5em', marginBottom: '1em', textAlign: 'right'}}>
+  <a href="#complete-code" style={{fontSize: '1em'}}>See complete code →</a>
+</div>
+The game file (ab12.py) follows this following structure:
+- **Imports** 
+<br/>Import ARCEngine classes and any standard library modules needed.
+- **Sprite Definitions** 
+<br/>Define sprite templates in a dictionary. Sprites are objects with a name, rectangular pixel array, and optional tags. 
+- **Level Definitions**
+<br/>Define levels as a list of `Level` objects, each containing sprite placements and configuration data.
+- **Constants**
+<br/>Define game-wide constants for colors, grid size, and gameplay parameters.
+- **Game Class**
+<br/>Create a class extending `ARCBaseGame` that implements game logic. The class name must match the 4-character game ID with the first letter capitalized.
 
 ---
 
@@ -130,7 +124,7 @@ The game class extends `ARCBaseGame` and accepts a seed parameter:
 
 ```python
 class Ab12(ARCBaseGame):
-    """Click-to-remove puzzle game with seeded random sprite generation."""
+    """Click-to-remove game with seeded random sprite generation."""
 
     def __init__(self, seed: int = 0) -> None:
         self._seed = seed
@@ -351,7 +345,7 @@ MAX_SIZE = 4
 
 
 class Ab12(ARCBaseGame):
-    """Click-to-remove puzzle game with seeded random sprite generation."""
+    """Click-to-remove game with seeded random sprite generation."""
 
     def __init__(self, seed: int = 0) -> None:
         self._seed = seed
