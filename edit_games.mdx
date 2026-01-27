@@ -22,9 +22,9 @@ The environments follow this directory structure:
 ```
 ARC-AGI-3-Environments/
 └── environment_files/
-    └── ls20/
+    └── <game-id>/
         └── <version>/
-            ├── ls20.py      # Main game file
+            ├── <game-id>      # Main game file
             └── metadata.json      # Game metadata
 ```
 ### Creating a New Version
@@ -164,7 +164,7 @@ This is now the new version of ls20 level 1:
   <img src="/images/ls20-v2.png" alt="level variant" />
 </Frame>
 ---
-## Additional Info
+## Additional Information
 
 ### Level Data
 
@@ -172,23 +172,10 @@ The `data` dictionary stores level-specific configuration. This will vary for ev
 
 ```python
 data={
-    # Energy/steps
-    "StepCounter": 30,
-    
-    # Goal configuration (single value)
-    "GoalType": 5,
-    "GoalColor": 9,
-    
-    # Multiple goals
-    "GoalTypes": [5, 0, 2],
-    "GoalColors": [9, 8, 14],
-    
-    # Feature flags
-    "FogOfWar": False
-
-    # Custom game data
-    "StartingItems": ["item-1", "item-2"],
-    "AnimationDelay": 3,
+    "Amount": 30,
+    "Values": [5, 0, 2],
+    "level_flag": False
+    "names": ["name-1", "name-2"],
 }
 ```
 
@@ -196,8 +183,8 @@ data={
 level data is accessed in the game class:
 
 ```python
-step_count = self.current_level.get_data("StepCounter")
-fog_enabled = self.current_level.get_data("FogOfWar")
+self.amount = self.current_level.get_data("Amount")
+self.flag = self.current_level.get_data("level_flag")
 ```
 ---
 ## Other Techniques
@@ -206,7 +193,7 @@ fog_enabled = self.current_level.get_data("FogOfWar")
 
 ```python
 # Add sprite during gameplay
-new_sprite = sprites["Energy"].clone().set_position(x, y)
+new_sprite = sprites["sprite-name"].clone().set_position(x, y)
 self.current_level.add_sprite(new_sprite)
 
 # Remove sprite
@@ -223,7 +210,7 @@ players = self.current_level.get_sprites_by_tag("Player")
 sprite = self.current_level.get_sprite_at(x, y)
 
 # Get sprites by name
-obstacles = self.current_level.get_sprites_by_name("Obstacle")
+ABC_sprites = self.current_level.get_sprites_by_name("ABC")
 ```
 
 ### Animation Pattern
