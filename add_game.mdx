@@ -1,0 +1,438 @@
+---
+title: "Creating a New Game"
+description: "Building and adding a game to  ARC-AGI-3 Environments"
+icon: "gamepad-2"
+---
+
+## Overview
+
+This example walks through a simple game where randomly generated sprites appear and the player must click to remove them all to win.
+
+---
+
+## Project Setup
+
+### Directory Structure
+
+Create the following structure:
+
+```
+ARC-AGI-3-Environments/
+└── environment_files/
+    └── ab12/
+        └── v1/
+            ├── ab12.py
+            └── metadata.json
+```
+
+### Metadata File
+
+Create `metadata.json`:
+
+```json
+{
+  "game_id": "ab12-v1",
+  "local_dir": "environment_files\\ab12\\v1",
+}
+```
+
+---
+
+## Game File Structure
+
+The game file (`ab12.py`) follows this structure:
+
+```python
+# 1. Imports
+from arcengine import ARCBaseGame, Camera, GameAction, Level, Sprite
+
+# 2. Sprite definitions
+sprites = { }
+
+# 3. Level definitions
+levels = [ ]
+
+# 4. Constants
+BACKGROUND_COLOR = 0
+
+# 5. Game class
+class Ab12(ARCBaseGame):
+    ...
+```
+
+---
+
+## Imports and Constants
+
+Start with the imports and constants:
+
+```python
+import random
+from typing import Optional
+
+from arcengine import (
+    ARCBaseGame,
+    Camera,
+    GameAction,
+    Level,
+    Sprite,
+)
+
+# Background and padding colors
+BACKGROUND_COLOR = 0  # WHITE
+PADDING_COLOR = 4     # DARK_GRAY
+GRID_SIZE = 64
+
+# Colors available for generated sprites (excluding background for visibility)
+SPRITE_COLORS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+
+# Parameters for Procedural Generation
+MIN_SPRITE_COUNT = 2
+MAX_SPRITE_COUNT = 16
+MIN_SIZE = 1
+MAX_SIZE = 4
+```
+
+---
+
+## Sprite and Level Definitions
+
+Define the sprites and levels for your game.  
+In this example, the base sprite template that will be cloned and modified during generation:
+
+```python
+# Base sprite template - single pixel will be cloned, scaled, and recolored
+sprites = {
+    "sprite-1": Sprite(
+        pixels=[
+            [9],
+        ],
+        name="sprite-1",
+        visible=True,
+        collidable=True,
+    ),
+}
+
+# Single level with empty sprite list - populated in on_set_level()
+levels = [
+    Level(
+        sprites=[],
+        grid_size=(64, 64),
+    ),
+]
+```
+
+---
+
+## Game Class Definition
+
+The game class extends `ARCBaseGame` and accepts a seed parameter:
+
+```python
+class Ab12(ARCBaseGame):
+    """Click-to-remove puzzle game with seeded random sprite generation."""
+
+    def __init__(self, seed: int = 0) -> None:
+        self._seed = seed
+        
+        # Create camera with background and padding colors
+        camera = Camera(
+            background=BACKGROUND_COLOR,
+            letter_box=PADDING_COLOR,
+            width=GRID_SIZE,
+            height=GRID_SIZE,
+        )
+
+        # Initialize base game
+        super().__init__(
+            game_id="ab12",
+            levels=levels,
+            camera=camera,
+        )
+```
+
+## Gameplay Logic and Mechanics
+
+This game generates sprites by cloning from the sprite dictionary and applying random properties:
+
+```python
+def generate_sprites(self) -> None:
+    """Generate a random set of sprites based on the seed."""
+    self._rng = random.Random(self._seed)
+    
+    # Determine number of sprites
+    sprite_count = self._rng.randint(MIN_SPRITE_COUNT, MAX_SPRITE_COUNT)
+
+    for _ in range(sprite_count):
+        scale = self._rng.randint(MIN_SIZE, MAX_SIZE)
+        color = self._rng.choice(SPRITE_COLORS)
+        x = self._rng.randint(0, GRID_SIZE - 1)
+        y = self._rng.randint(0, GRID_SIZE - 1)
+        
+        # Clone template, then set color, scale, and position
+        sprite = (
+            sprites["sprite-1"]
+            .clone()
+            .color_remap(None, color)
+            .set_scale(scale)
+            .set_position(x, y)
+        )
+        self.current_level.add_sprite(sprite)
+```
+
+### Generation Pattern
+
+The method chains operations on the cloned sprite:
+
+1. **`.clone()`** - Creates independent copy of template
+2. **`.color_remap(None, color)`** - Changes all pixels to random color
+3. **`.set_scale(scale)`** - Applies the random scale
+4. **`.set_position(x, y)`** - Places at random position in the grid
+
+These can be used in level definitions directly for static levels.
+
+---
+
+## Level Initialization
+
+The `on_set_level()` method is called when a level loads:
+
+```python
+def on_set_level(self, level: Level) -> None:
+    """Called when the level is set."""
+    # Generate sprites based on seed
+    self.generate_sprites()
+```
+
+This method triggers sprite generation each time the level is set or reset.
+
+---
+
+## Sprite Detection
+
+Handle finding sprites at click coordinates:
+
+```python
+def _get_sprite_at(self, grid_x: int, grid_y: int) -> Optional[Sprite]:
+    """Find a target sprite that contains the given grid coordinates."""
+    for sprite in self.current_level._sprites:
+        # Get sprite bounds (accounting for scale)
+        sx, sy = sprite.x, sprite.y
+        sw, sh = sprite.width, sprite.height
+
+        if sx <= grid_x < sx + sw and sy <= grid_y < sy + sh:
+            return sprite
+    return None
+```
+---
+
+## Win Condition
+
+Define when the player wins:
+
+```python
+def _check_win(self) -> bool:
+    """Check if all targets have been removed."""
+    return len(self.current_level._sprites) == 0
+```
+
+---
+
+## Game Loop (step method)
+
+The `step()` method contains the main game logic:
+
+```python
+def step(self) -> None:
+    """Process game logic for each step."""
+    
+    # Handle click action (ACTION6)
+    if self.action.id == GameAction.ACTION6:
+        x = self.action.data.get("x", 0)
+        y = self.action.data.get("y", 0)
+
+        # Convert display coordinates to grid coordinates
+        coords = self.camera.display_to_grid(x, y)
+
+        if coords:
+            grid_x, grid_y = coords
+
+            # Find and remove the clicked sprite from the level
+            clicked_sprite = self._get_sprite_at(grid_x, grid_y)
+            if clicked_sprite:
+                self.current_level.remove_sprite(clicked_sprite)
+
+                # Check win condition
+                if self._check_win():
+                    self.win()
+
+    # REQUIRED: Signal that the action is complete
+    self.complete_action()
+```
+
+### Action Flow
+
+1. **Check action type**: `GameAction.ACTION6` is the click action
+2. **Get coordinates**: Extract `x`, `y` from `action.data`
+3. **Convert coordinates**: `display_to_grid()` handles camera scaling
+4. **Find sprite**: Check if click hit any sprite
+5. **Remove sprite**: Update level state
+6. **Check win**: Call `self.win()` if conditions met
+7. **Complete action**: Always call `self.complete_action()`
+
+---
+
+## Testing the Game
+
+Run the game using the ARC-AGI-3 client and setting the random seed:
+
+```python
+from arcagi3 import ARCAGI3
+
+arc = ARCAGI3()
+env = arc.make("ab12-v1", seed=0, render_mode="terminal")
+
+# Perform clicks (ACTION6 with x, y coordinates)
+from arcengine import GameAction
+env.step(GameAction.ACTION6, data={"x": 32, "y": 32})
+```
+
+---
+
+## Complete Code
+
+<Accordion title="Full ab12.py source code">
+
+```python
+import random
+from typing import Optional
+
+from arcengine import (
+    ARCBaseGame,
+    Camera,
+    GameAction,
+    Level,
+    Sprite,
+)
+
+# Create sprites dictionary with all sprite definitions
+sprites = {
+    "sprite-1": Sprite(
+        pixels=[
+            [9],
+        ],
+        name="sprite-1",
+        visible=True,
+        collidable=True,
+    ),
+}
+
+# Create levels array with all level definitions
+levels = [
+    # Level 1
+    Level(
+        sprites=[],
+        grid_size=(64, 64),
+    ),
+]
+
+BACKGROUND_COLOR = 0
+PADDING_COLOR = 4
+GRID_SIZE = 64
+
+# Available colors for sprites (excluding background color for visibility)
+SPRITE_COLORS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+
+# Parameters for Procedural Generation
+MIN_SPRITE_COUNT = 2
+MAX_SPRITE_COUNT = 16
+MIN_SIZE = 1
+MAX_SIZE = 4
+
+
+class Ab12(ARCBaseGame):
+    """Click-to-remove puzzle game with seeded random sprite generation."""
+
+    def __init__(self, seed: int = 0) -> None:
+        self._seed = seed
+        # Create camera with background and padding colors
+        camera = Camera(
+            background=BACKGROUND_COLOR,
+            letter_box=PADDING_COLOR,
+            width=GRID_SIZE,
+            height=GRID_SIZE,
+        )
+
+        super().__init__(
+            game_id="ab12",
+            levels=levels,
+            camera=camera,
+        )
+
+    def generate_sprites(self) -> None:
+        """Generate a random set of sprites based on the seed."""
+        self._rng = random.Random(self._seed)
+        # Determine number of sprites
+        sprite_count = self._rng.randint(MIN_SPRITE_COUNT, MAX_SPRITE_COUNT)
+
+        for _ in range(sprite_count):
+            scale = self._rng.randint(MIN_SIZE, MAX_SIZE)
+            color = self._rng.choice(SPRITE_COLORS)
+            x = self._rng.randint(0, GRID_SIZE - 1)
+            y = self._rng.randint(0, GRID_SIZE - 1)
+            # Create the sprite setting color, scale, and position then add it to the level
+            sprite = sprites["sprite-1"].clone().color_remap(None, color).set_scale(scale).set_position(x, y)
+            self.current_level.add_sprite(sprite)
+
+    def on_set_level(self, level: Level) -> None:
+        """Called when the level is set."""
+        # Generate sprites based on seed
+        self.generate_sprites()
+
+    def _get_sprite_at(self, grid_x: int, grid_y: int) -> Optional[Sprite]:
+        """Find a target sprite that contains the given grid coordinates."""
+        for sprite in self.current_level._sprites:
+            # Get sprite bounds (accounting for scale)
+            sx, sy = sprite.x, sprite.y
+            sw, sh = sprite.width, sprite.height
+
+            if sx <= grid_x < sx + sw and sy <= grid_y < sy + sh:
+                return sprite
+        return None
+
+    def _check_win(self) -> bool:
+        """Check if all targets have been removed."""
+        return len(self.current_level._sprites) == 0
+
+    def step(self) -> None:
+        """Process game logic for each step."""
+        # Handle click action (ACTION6)
+        if self.action.id == GameAction.ACTION6:
+            x = self.action.data.get("x", 0)
+            y = self.action.data.get("y", 0)
+
+            # Convert display coordinates to grid coordinates
+            coords = self.camera.display_to_grid(x, y)
+
+            if coords:
+                grid_x, grid_y = coords
+
+                # Find and remove the clicked sprite from the level
+                clicked_sprite = self._get_sprite_at(grid_x, grid_y)
+                if clicked_sprite:
+                    self.current_level.remove_sprite(clicked_sprite)
+
+                    # Check win condition
+                    if self._check_win():
+                        self.win()
+
+        self.complete_action()
+```
+
+</Accordion>
+
+---
+
+## Further Reading
+
+For more information, refer to the **ARC Engine Documentation**.
