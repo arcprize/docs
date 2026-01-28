@@ -80,6 +80,7 @@
                     {
                         "group": "Using the API",
                         "pages": [
+                            "rest_overview",
                             "rate_limits"
                         ]
                     }
