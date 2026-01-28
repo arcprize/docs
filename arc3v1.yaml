@@ -90,28 +90,19 @@ components:
       type: object
       description: |
         Aggregate results for an entire scorecard run.  
-        Includes cumulative counters, optional metadata echoed back from
-        the open request, the API key that authenticated the run, and a
-        per-game breakdown in `cards`.
+        Returned when closing a scorecard or when retrieving a scorecard (open or closed).
+        Includes cumulative totals, optional metadata echoed from the open request
+        (e.g. `source_url`, `tags`, `opaque`), user identity (`user_name`, `user_id`),
+        timestamps (`open_at`, `last_update`, `published_at`), and a per-environment
+        breakdown in `environments`. The `tags_scores` array provides per-tag aggregates
+        for runs that were tagged.
       properties:
-        api_key:
-          type: string
-          description: The API key that initiated and authenticated this run.
         card_id:
           type: string
-          description: The Scorecard ID that was returned by returned by **OpenScorecardResponse**.
-        won:
-          type: integer
-          description: Total number of games won in this scorecard.
-        played:
-          type: integer
-          description: Total number of games played (wins + losses + unfinished).
-        total_actions:
-          type: integer
-          description: Cumulative number of actions taken across all plays.
+          description: The scorecard ID returned by **OpenScorecardResponse**.
         score:
           type: integer
-          description: Sum of per-game scores (each 0-254) for this scorecard.
+          description: Aggregate score for this scorecard (sum of per-level scores).
         source_url:
           type: string
           format: uri
@@ -120,58 +111,213 @@ components:
           type: array
           description: Arbitrary labels echoed back from the open request.
           items: { type: string }
+        user_name:
+          type: string
+          description: Display name of the user who opened/ran this scorecard.
+        user_id:
+          type: string
+          description: Stable identifier of the user (e.g. provider subject id).
+        published_at:
+          type: string
+          format: date-time
+          description: When the scorecard was closed/published (absent if still open).
+        environments:
+          type: array
+          description: Per-environment breakdown; each entry is one game/environment with its runs.
+          items:
+            $ref: '#/components/schemas/EnvironmentSummary'
         opaque:
           type: object
           description: |
             Free-form JSON blob (≤ 16 KB) exactly as provided when the
             scorecard was opened. Absent if none was supplied.
           additionalProperties: true
-        cards:
-          type: object
-          description: Map keyed by `game_id`, each entry summarising a single game.
-          additionalProperties:
-            $ref: '#/components/schemas/PerGameCard'
-      required: [api_key, card_id, won, played, total_actions, score, cards]
-
-    PerGameCard:
-      type: object
-      description: |
-        Statistics for one game inside a score-card.  
-        All arrays align positionally: index *n* of `scores`, `states`, and `actions`
-        describes the same play.
-      properties:
-        game_id:
+        tags_scores:
+          type: array
+          description: Per-tag aggregate statistics for runs that were tagged.
+          items:
+            $ref: '#/components/schemas/TagScore'
+        open_at:
           type: string
-          description: Identifier of the game these stats refer to.
-        total_plays:
+          format: date-time
+          description: When the scorecard was opened.
+        last_update:
+          type: string
+          format: date-time
+          description: When the scorecard was last updated (e.g. last action or close).
+        total_environments_completed:
           type: integer
-          description: Number of times this game was reset/played.
+          description: Number of environments that reached a terminal state (WIN or GAME_OVER).
+        total_environments:
+          type: integer
+          description: Total number of environments in this scorecard.
+        total_levels_completed:
+          type: integer
+          description: Cumulative levels completed across all runs.
+        total_levels:
+          type: integer
+          description: Total number of levels across all environments.
         total_actions:
           type: integer
-          description: Total actions taken across all plays of this game.
-        scores:
+          description: Cumulative number of actions taken across all plays.
+      required:
+        - card_id
+        - score
+        - environments
+        - open_at
+        - last_update
+        - total_environments_completed
+        - total_environments
+        - total_levels_completed
+        - total_levels
+        - total_actions
+
+    EnvironmentSummary:
+      type: object
+      description: |
+        Statistics for one environment (game) inside a scorecard.  
+        Contains aggregate counts and an array of `runs` (one per RESET/play).
+      properties:
+        id:
+          type: string
+          description: Environment/game identifier (e.g. `am92-80effacb`).
+        runs:
           type: array
-          description: Score achieved in each play (0-254).
+          description: One entry per run (RESET) in this environment.
           items:
-            type: integer
-        states:
-          type: array
-          description: |
-            Final state of each play:
-            
-            • **NOT_FINISHED** - the play is active and hasn't reached an end state.  
-            • **NOT_STARTED**  - the play has already ended (WIN or GAME_OVER) and must be RESET to continue.  
-            • **WIN**          - the play ended in victory.  
-            • **GAME_OVER**    - the play ended in defeat.
-          items:
-            type: string
-            enum: [NOT_FINISHED, NOT_STARTED, WIN, GAME_OVER]
+            $ref: '#/components/schemas/RunSummary'
+        score:
+          type: integer
+          description: Aggregate score for this environment.
         actions:
+          type: integer
+          description: Total actions taken in this environment across all runs.
+        levels_completed:
+          type: integer
+          description: Levels completed in this environment.
+        completed:
+          type: boolean
+          description: Whether this environment reached a terminal state (WIN or GAME_OVER).
+        level_count:
+          type: integer
+          description: Number of levels in this environment.
+        resets:
+          type: integer
+          description: Number of RESETs (level or full) in this environment.
+      required: [id, runs, score, actions, levels_completed, completed, level_count, resets]
+
+    RunSummary:
+      type: object
+      description: |
+        Statistics for a single run (one RESET → play until WIN/GAME_OVER or abandon)
+        within an environment. Arrays `level_scores`, `level_actions`, and
+        `level_baseline_actions` align by index (one entry per level).
+      properties:
+        id:
+          type: string
+          description: Environment id this run belongs to.
+        guid:
+          type: string
+          description: Server-generated session id for this run.
+        score:
+          type: integer
+          description: Score achieved in this run (0–254).
+        levels_completed:
+          type: integer
+          description: Number of levels completed in this run.
+        actions:
+          type: integer
+          description: Number of actions taken in this run.
+        resets:
+          type: integer
+          description: Number of resets (level or full) in this run.
+        state:
+          type: string
+          description: |
+            Final state of the run:
+            • **NOT_FINISHED** - run is active.  
+            • **NOT_STARTED**  - run has ended and would need RESET to continue.  
+            • **WIN**          - run ended in victory.  
+            • **GAME_OVER**    - run ended in defeat.
+          enum: [NOT_FINISHED, NOT_STARTED, WIN, GAME_OVER]
+        completed:
+          type: boolean
+          description: Whether the run reached a terminal state (WIN or GAME_OVER).
+        level_scores:
           type: array
-          description: Number of actions taken in each corresponding play.
-          items:
-            type: integer
-      required: [game_id, total_plays, total_actions]
+          description: Score achieved at each level (positional).
+          items: { type: integer }
+        level_actions:
+          type: array
+          description: Actions taken at each level (positional).
+          items: { type: integer }
+        level_baseline_actions:
+          type: array
+          description: Baseline (e.g. par) actions per level, when defined (positional).
+          items: { type: integer }
+        number_of_levels:
+          type: integer
+          description: Number of levels in this environment (may be 0 if not applicable).
+        number_of_environments:
+          type: integer
+          description: Number of environments (may be 0 if not applicable).
+      required:
+        - id
+        - guid
+        - score
+        - levels_completed
+        - actions
+        - resets
+        - state
+        - completed
+
+    TagScore:
+      type: object
+      description: Per-tag aggregate statistics for runs that were tagged (e.g. for filtering).
+      properties:
+        id:
+          type: string
+          description: Tag or run identifier.
+        guid:
+          type: string
+          description: Session id associated with this tag entry.
+        score:
+          type: integer
+          description: Aggregate score for this tag.
+        levels_completed:
+          type: integer
+          description: Levels completed for this tag.
+        actions:
+          type: integer
+          description: Total actions for this tag.
+        resets:
+          type: integer
+          description: Resets for this tag.
+        state:
+          type: string
+          enum: [NOT_FINISHED, NOT_STARTED, WIN, GAME_OVER]
+          description: Terminal state for this tag run, if applicable.
+        completed:
+          type: boolean
+          description: Whether this tag run reached a terminal state.
+        number_of_levels:
+          type: integer
+          description: Number of levels.
+        number_of_environments:
+          type: integer
+          description: Number of environments.
+      required:
+        - id
+        - guid
+        - score
+        - levels_completed
+        - actions
+        - resets
+        - state
+        - completed
+        - number_of_levels
+        - number_of_environments
+
       
     ResetCommand:
       type: object
@@ -460,25 +606,63 @@ paths:
               examples:
                 success:
                   value:
-                    card_id: 8bb3b1b8-4b46-4a29-a13b-ad7850a0f916
-                    won: 3
-                    played: 5
-                    total_actions: 1742
-                    score: 12
-                    source_url: https://github.com/example/agent
-                    tags: [baseline, gpt-4o]
-                    opaque:
-                      model: gpt-4o
-                      temperature: 0.25
-                    api_key: YOUR-API-KEY-ID
-                    cards:
-                      ls20-016295f7601e:
-                        game_id: ls20-016295f7601e
-                        total_plays: 2
-                        total_actions: 148
-                        scores: [2, 3]
-                        states: [NOT_FINISHED, WIN]
-                        actions: [33, 115]
+                    card_id: 8ae52f21-b40c-457b-9f4e-65bd8381e67f
+                    score: 100
+                    source_url: https://sandbox.internal.arc-prize.com
+                    tags: [human]
+                    user_name: distracted_poincare
+                    user_id: "102214435702678430912@google"
+                    published_at: "2026-01-26T23:34:57.097896Z"
+                    environments:
+                      - id: am92-80effacb
+                        runs:
+                          - id: am92-80effacb
+                            guid: 4a38a278-796b-4f42-a28b-a27a68dbf862
+                            score: 100
+                            levels_completed: 5
+                            actions: 136
+                            resets: 0
+                            state: WIN
+                            completed: true
+                            level_scores: [100, 100, 100, 100, 100]
+                            level_actions: [12, 34, 41, 26, 23]
+                            level_baseline_actions: [20, 40, 50, 55, 60]
+                            number_of_levels: 0
+                            number_of_environments: 0
+                        score: 100
+                        actions: 136
+                        levels_completed: 5
+                        completed: true
+                        level_count: 5
+                        resets: 0
+                    tags_scores:
+                      - id: change9
+                        guid: d3a0a4d8-536c-479d-b5a8-10bf1dc8aee3
+                        score: 100
+                        levels_completed: 5
+                        actions: 136
+                        resets: 0
+                        state: NOT_FINISHED
+                        completed: false
+                        number_of_levels: 5
+                        number_of_environments: 1
+                      - id: example
+                        guid: 66fe6b58-adf8-45b1-ac73-70ed486e22d0
+                        score: 100
+                        levels_completed: 5
+                        actions: 136
+                        resets: 0
+                        state: NOT_FINISHED
+                        completed: false
+                        number_of_levels: 5
+                        number_of_environments: 1
+                    open_at: "2026-01-26T23:34:18.213873Z"
+                    last_update: "2026-01-26T23:34:53.229182Z"
+                    total_environments_completed: 1
+                    total_environments: 1
+                    total_levels_completed: 5
+                    total_levels: 5
+                    total_actions: 136
         '401':
           description: Missing or invalid **X-API-Key** header.
         '404':
@@ -513,18 +697,21 @@ paths:
               examples:
                 example:
                   value:
-                    card_id: 8bb3b1b8-4b46-4a29-a13b-ad7850a0f916
-                    won: 3
-                    played: 5
-                    total_actions: 142
-                    score: 612
-                    source_url: https://github.com/example/agent
-                    tags: [baseline, gpt-4o]
-                    opaque:
-                      model: gpt-4o
-                      temperature: 0.25
-                    api_key: YOUR-API-KEY-ID
-                    cards: { … }
+                    card_id: 8ae52f21-b40c-457b-9f4e-65bd8381e67f
+                    score: 100
+                    source_url: https://sandbox.internal.arc-prize.com
+                    tags: [human]
+                    user_name: distracted_poincare
+                    user_id: "102214435702678430912@google"
+                    open_at: "2026-01-26T23:34:18.213873Z"
+                    last_update: "2026-01-26T23:34:53.229182Z"
+                    total_environments_completed: 1
+                    total_environments: 1
+                    total_levels_completed: 5
+                    total_levels: 5
+                    total_actions: 136
+                    environments: []
+                    tags_scores: []
         '401':
           description: Missing or invalid **X-API-Key** header.
         '404':
@@ -535,10 +722,9 @@ paths:
       tags: [Scorecards]
       summary: Retrieve scorecard (one game)
       description: |
-        Returns the scorecard statistics **limited to a single game**.
-        Only the entry matching `game_id` is present in `cards`; all other
-        top-level counters (`won`, `played`, etc.) are recomputed for that
-        game alone.
+        Returns the scorecard statistics **limited to a single environment**.
+        Only the entry matching `game_id` is present in `environments`; all
+        top-level counters are recomputed for that environment alone.
 
         Useful for dashboards that present per-game progress without
         fetching the full scorecard payload.
@@ -568,25 +754,42 @@ paths:
               examples:
                 example:
                   value:
-                    card_id: 8bb3b1b8-4b46-4a29-a13b-ad7850a0f916
-                    won: 1
-                    played: 2
-                    total_actions: 478
-                    score: 3
-                    source_url: https://github.com/example/agent
-                    tags: [baseline, gpt-4o]
-                    opaque:
-                      model: gpt-4o
-                      temperature: 0.25
-                    api_key: YOUR-API-KEY-ID
-                    cards:
-                      ft09-1d57d6daeb05:
-                        game_id: ft09-1d57d6daeb05
-                        total_plays: 2
-                        total_actions: 478
-                        scores: [2, 3]
-                        states: [NOT_FINISHED, WIN]
-                        actions: [171, 307]
+                    card_id: 8ae52f21-b40c-457b-9f4e-65bd8381e67f
+                    score: 100
+                    source_url: https://sandbox.internal.arc-prize.com
+                    tags: [human]
+                    user_name: distracted_poincare
+                    user_id: "102214435702678430912@google"
+                    open_at: "2026-01-26T23:34:18.213873Z"
+                    last_update: "2026-01-26T23:34:53.229182Z"
+                    total_environments_completed: 1
+                    total_environments: 1
+                    total_levels_completed: 5
+                    total_levels: 5
+                    total_actions: 136
+                    environments:
+                      - id: ft09-1d57d6daeb05
+                        runs:
+                          - id: ft09-1d57d6daeb05
+                            guid: 66fe6b58-adf8-45b1-ac73-70ed486e22d0
+                            score: 3
+                            levels_completed: 2
+                            actions: 478
+                            resets: 0
+                            state: WIN
+                            completed: true
+                            level_scores: [1, 2]
+                            level_actions: [171, 307]
+                            level_baseline_actions: [200, 250]
+                            number_of_levels: 5
+                            number_of_environments: 1
+                        score: 3
+                        actions: 478
+                        levels_completed: 2
+                        completed: true
+                        level_count: 5
+                        resets: 0
+                    tags_scores: []
         '401':
           description: Missing or invalid **X-API-Key** header.
         '404':

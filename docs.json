@@ -74,7 +74,7 @@
                 ]
             },
             {
-                "tab": "Rest API Guide",
+                "tab": "REST API Guide",
                 "openapi": "arc3v1.yaml",
                 "groups": [
                     {
