@@ -74,6 +74,26 @@
                 ]
             },
             {
+                "tap": "ARC AGI Wrapper",
+                "groups": [
+                    {
+                        "group": "Get Started",
+                        "pages": [
+                            "wrapper/overview",
+                            "wrapper/repl",
+                            "wrapper/minimal"
+                        ]
+                    },
+                    {
+                        "group": "API Reference",
+                        "pages": [
+                            "wrapper/arc_agi",
+                            "wrapper/environment_wrapper"
+                        ]
+                    }
+                ]
+            },
+            {
                 "tab": "REST API Guide",
                 "openapi": "arc3v1.yaml",
                 "groups": [

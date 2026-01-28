@@ -1,0 +1,34 @@
+---
+title: "Overview"
+description: "ARC AGI 3 Wrapper"
+icon: "file"
+---
+
+Python Wrapper for Running ARC AGI 3 Environments both locally and via API
+
+## QuickStart
+
+### Prerequisites
+
+1. **Installation** (intended, not yet available):
+   ```bash
+   uv add arc-agi
+   # or
+   pip install arc-agi
+   ```
+
+2. **API Key**: You can optionally set the `ARC_API_KEY` environment variable with your API key. If no key is provided, an anonymous key will be used. However, registering for an API key will give you access to more games at release. [Register for an API key at https://three.arcprize.org](https://three.arcprize.org)
+   
+   The code supports loading from `.env` and `.env.example` files (using python-dotenv), or you can set it directly:
+   ```bash
+   export ARC_API_KEY="your-api-key-here"
+   ```
+   
+   Or create a `.env` file in your project root:
+   ```bash
+   echo 'ARC_API_KEY=your-api-key-here' > .env
+   ```
+
+## Up Next
+
+Interact with your first environments vai the [Python REPL](./wrapper/repl) or via a [Python Script](./wrapper/minimal)

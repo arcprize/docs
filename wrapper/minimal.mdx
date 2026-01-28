@@ -1,0 +1,78 @@
+---
+title: "Minimal"
+description: "ARC AGI 3 Minimal Python Example"
+icon: "python"
+---
+
+Here's a minimal example that plays a game and renders it in the terminal:
+
+```python
+import random
+
+from arcengine import GameAction, GameState
+from arc_agi import ArcAgi
+
+# Initialize the ARC-AGI-3 client
+arc = ArcAgi()
+
+# Create an environment with terminal rendering
+env = arc.make("ls20", render_mode="terminal")
+if env is None:
+    print("Failed to create environment")
+    exit(1)
+
+# Play the game
+for step in range(100):
+    # Choose a random action
+    action = random.choice(env.action_space)
+    action_data = {}
+    if action.is_complex():
+        action_data = {
+            "x": random.randint(0, 63),
+            "y": random.randint(0, 63),
+        }        
+        
+    # Perform the action (rendering happens automatically)
+    obs = env.step(action, data=action_data)
+    
+    # Check game state
+    if obs and obs.state == GameState.WIN:
+        print(f"Game won at step {step}!")
+        break
+    elif obs and obs.state == GameState.GAME_OVER:
+        env.reset()
+
+# Get and display scorecard
+scorecard = arc.get_scorecard()
+if scorecard:
+    print(f"Final Score: {scorecard.score}")
+```
+
+### Rendering Options
+
+You can render games in two ways:
+
+1. **Terminal rendering** (text-based, default_fps bounded):
+   ```python
+   env = arc.make("ls20", render_mode="terminal")
+   ```
+
+2. **Terminal rendering** (text-based, unbounded):
+   ```python
+   env = arc.make("ls20", render_mode="terminal-fast")
+   ```
+
+3. **Human rendering** (matplotlib visualization, default_fps bounded):
+   ```python
+   env = arc.make("ls20", render_mode="human")
+   ```
+
+4. **Custom renderer** (provide your own function):
+   ```python
+   from arcengine import FrameDataRaw
+   
+   def my_renderer(steps: int, frame_data: FrameDataRaw) -> None:
+       print(f"Step {steps}: {frame_data.state.name}")
+   
+   env = arc.make("ls20", renderer=my_renderer)
+   ```
