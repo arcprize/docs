@@ -57,15 +57,15 @@ Each game version requires a `metadata.json` file:
 | `local_dir` | Relative path to game directory |
 
 4. **Test the new version** using ARC-AGI-3-Environments:
-   ```python
-   from arcagi3 import ARCAGI3
+```python
+from arc_agi import ArcAgi
 
-   # Initialize the ARC-AGI-3 client
-   arc = ARCAGI3()
+# Initialize the ARC-AGI-3 client
+arc = ArcAgi()
 
-   # Create an environment with terminal rendering
-   env = arc.make("ls20-v2", render_mode="terminal")
-   ```
+# Create an environment with terminal rendering
+env = arc.make("ls20-v2", render_mode="terminal")
+```
 ---
 ## Editing the Game File
 

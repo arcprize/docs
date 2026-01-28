@@ -265,9 +265,10 @@ The `step()` method contains the main game logic:
 Run the game using the ARC-AGI-3 client and setting the random seed:
 
 ```python
-from arcagi3 import ARCAGI3
+from arc_agi import ArcAgi
 
-arc = ARCAGI3()
+# Initialize the ARC-AGI-3 client
+arc = ArcAgi()
 env = arc.make("ab12-v1", seed=0, render_mode="terminal")
 
 # Perform clicks (ACTION6 with x, y coordinates)
