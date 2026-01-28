@@ -82,15 +82,15 @@ from arcengine import ARCBaseGame, Camera, GameAction, Level, Sprite
 
 # Sprite definitions
 sprites = {
-    "Player": Sprite(pixels=[...], name="Player", ...),
-    "Obstacle": Sprite(pixels=[...], name="Obstacle", ...),
+    "sprite-1": Sprite(pixels=[...], name="sprite-1", ...),
+    "sprite-2": Sprite(pixels=[...], name="sprite-2", ...),
     # ...
 }
 
 # Level definitions
 levels = [
-    Level(sprites=[...], grid_size=(64, 64), data={...}),
-    Level(sprites=[...], grid_size=(64, 64), data={...}),
+    Level(sprites=[sprites["sprite-1"].clone().set_position(0, 0)...], grid_size=(64, 64), data={...}),
+    Level(sprites=[sprites["sprite-2"].clone().set_position(0, 0)...], grid_size=(64, 64), data={...}),
     # ...
 ]
 
