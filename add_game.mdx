@@ -236,7 +236,7 @@ The `step()` method contains the main game logic:
                 grid_x, grid_y = coords
 
                 # Find and remove the clicked sprite from the level
-                clicked_sprite = self._get_sprite_at(grid_x, grid_y)
+                clicked_sprite = self.current_level.get_sprite_at(grid_x, grid_y)
                 if clicked_sprite:
                     self.current_level.remove_sprite(clicked_sprite)
 
