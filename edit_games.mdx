@@ -122,7 +122,7 @@ This sprite in `ls20.py` now uses colors 8 and 10 instead of 9 and 12.
 
 ```python
 sprites = {
-    "Player": Sprite(
+    "pca": Sprite(
         pixels=[
             [10, 10, 10, 10, 10],
             [10, 10, 10, 10, 10],
@@ -130,10 +130,10 @@ sprites = {
             [8, 8, 8, 8, 8],
             [8, 8, 8, 8, 8],
         ],
-        name="Player",
+        name="pca",
         visible=True,
         collidable=True,
-        tags=["Player"],
+        tags=["caf"],
     ),
 }
 ```
@@ -147,13 +147,13 @@ When sprites are placed in levels, you can modify them inline:
 Level(
     sprites=[
         # Edit position
-        sprites["Player"].clone().set_position(29, 35),
+        sprites["pca"].clone().set_position(29, 35),
         
         # Edit colors
-        sprites["Energy"].clone().set_position(15, 16).color_remap(None, 12),
+        sprites["zba"].clone().set_position(15, 16).color_remap(None, 12),
         
         # Edit rotation
-        sprites["Rotate"].clone().set_position(49, 45).set_rotation(90),
+        sprites["kdy"].clone().set_position(49, 45).set_rotation(90),
     ],
     # ...
 )
