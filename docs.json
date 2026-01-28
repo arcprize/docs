@@ -74,21 +74,21 @@
                 ]
             },
             {
-                "tab": "ARC AGI Wrapper",
+                "tab": "ARC AGI Toolkit",
                 "groups": [
                     {
                         "group": "Get Started",
                         "pages": [
-                            "wrapper/overview",
-                            "wrapper/repl",
-                            "wrapper/minimal"
+                            "toolkit/overview",
+                            "toolkit/repl",
+                            "toolkit/minimal"
                         ]
                     },
                     {
                         "group": "API Reference",
                         "pages": [
-                            "wrapper/arc_agi",
-                            "wrapper/environment_wrapper"
+                            "toolkit/arc_agi",
+                            "toolkit/environment_wrapper"
                         ]
                     }
                 ]
