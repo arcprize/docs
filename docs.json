@@ -74,7 +74,7 @@
                 ]
             },
             {
-                "tap": "ARC AGI Wrapper",
+                "tab": "ARC AGI Wrapper",
                 "groups": [
                     {
                         "group": "Get Started",
