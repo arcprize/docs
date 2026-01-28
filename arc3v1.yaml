@@ -6,6 +6,9 @@ info:
     Programmatic interface for running agents against ARC‑AGI‑3 games, opening/closing score‑cards and driving game state with actions.
     All requests **require** an `X‑API‑Key` header issued from the ARC‑AGI‑3 web console.
 
+    **Important: Session Affinity via Cookies**  
+    Games are stateful and require session affinity. The server sets cookies (especially `AWSALB*` cookies) in responses that **must be included in all subsequent requests** for the same game session. These cookies route requests to the correct backend instance maintaining your game state. Most HTTP clients handle cookies automatically, but ensure your client preserves and sends cookies received from RESET and ACTION responses.
+
 servers:
   - url: https://three.arcprize.org
 
@@ -214,6 +217,8 @@ components:
       description: |
         Issues a one-parameter action (ACTION1 - ACTION5) to a running
         game instance identified by `guid`.
+
+        **Important:** Include any cookies (especially `AWSALB*` cookies) received from previous RESET or ACTION responses to ensure session affinity.
       properties:
         game_id:
           type: string
@@ -237,6 +242,8 @@ components:
         Supplies an `(x, y)` location on the 64 × 64 game grid along with
         the game/session identifiers so the engine can apply the action
         to the correct running instance.
+
+        **Important:** Include any cookies (especially `AWSALB*` cookies) received from previous RESET or ACTION responses to ensure session affinity.
       properties:
         game_id:
           type: string
@@ -301,15 +308,15 @@ components:
             • **WIN**          - session ended in victory.  
             • **GAME_OVER**    - session ended in defeat.
           enum: [NOT_FINISHED, NOT_STARTED, WIN, GAME_OVER]
-        score:
+        levels_completed:
           type: integer
-          description: Current cumulative score for this run.
+          description: Current cumulative number of levels completed for this run.
           minimum: 0
           maximum: 254
-        win_score:
+        win_levels:
           type: integer
           description: |
-            Score threshold required to reach the **WIN** state. Mirrors
+            Level threshold required to reach the **WIN** state. Mirrors
             the game's configured win condition so agents can adapt
             dynamically without hard-coding values.
           minimum: 0
@@ -331,7 +338,7 @@ components:
           items:
             type: integer
             enum: [1, 2, 3, 4, 5, 6]
-      required: [game_id, guid, frame, state, score, win_score, action_input, available_actions]
+      required: [game_id, guid, frame, state, levels_completed, win_levels, action_input, available_actions]
 
 tags:
   - name: Games
@@ -606,6 +613,8 @@ paths:
 
         The call always returns the first (or refreshed) frame of the
         game state, along with updated score and win condition.
+
+        **Note:** The response includes cookies (particularly `AWSALB*` cookies) that must be included in all subsequent ACTION commands for this session. These cookies ensure requests are routed to the same backend instance maintaining your game state.
       operationId: resetGame
       security:
         - ApiKeyAuth: []
@@ -643,8 +652,8 @@ paths:
                     frame:
                       - [[0,0,0,…],[…]] # truncated for brevity
                     state: NOT_FINISHED
-                    score: 0
-                    win_score: 254
+                    levels_completed: 0
+                    win_levels: 254
                     action_input:
                       id: 0
                       data: {}
@@ -709,8 +718,8 @@ paths:
                     frame:
                       - [[0,0,1,…],[…]]   # truncated
                     state: NOT_FINISHED
-                    score: 3
-                    win_score: 254
+                    levels_completed: 3
+                    win_levels: 254
                     action_input:
                       id: 1
                     available_actions: [1, 2, 3, 4]
@@ -774,8 +783,8 @@ paths:
                     frame:
                       - [[0,0,1,…],[…]]   # truncated
                     state: NOT_FINISHED
-                    score: 3
-                    win_score: 254
+                    levels_completed: 3
+                    win_levels: 254
                     action_input:
                       id: 2
                     available_actions: [1, 2, 3, 4]
@@ -839,8 +848,8 @@ paths:
                     frame:
                       - [[0,0,1,…],[…]]   # truncated
                     state: NOT_FINISHED
-                    score: 3
-                    win_score: 254
+                    levels_completed: 3
+                    win_levels: 254
                     action_input:
                       id: 3
                     available_actions: [1, 2, 3, 4]
@@ -904,8 +913,8 @@ paths:
                     frame:
                       - [[0,0,1,…],[…]]   # truncated
                     state: NOT_FINISHED
-                    score: 3
-                    win_score: 254
+                    levels_completed: 3
+                    win_levels: 254
                     action_input:
                       id: 4
                     available_actions: [1, 2, 3, 4]
@@ -969,8 +978,8 @@ paths:
                     frame:
                       - [[0,0,1,…],[…]]   # truncated
                     state: NOT_FINISHED
-                    score: 3
-                    win_score: 254
+                    levels_completed: 3
+                    win_levels: 254
                     action_input:
                       id: 5
                     available_actions: [1, 2, 3, 4]
@@ -1034,8 +1043,8 @@ paths:
                     frame:
                       - [[…]]   # truncated for brevity
                     state: NOT_FINISHED
-                    score: 17
-                    win_score: 254
+                    levels_completed: 17
+                    win_levels: 254
                     action_input:
                       id: 6
                       data:
@@ -1101,8 +1110,8 @@ paths:
                     frame:
                       - [[0,0,1,…],[…]]   # truncated
                     state: NOT_FINISHED
-                    score: 3
-                    win_score: 254
+                    levels_completed: 3
+                    win_levels: 254
                     action_input:
                       id: 7
                     available_actions: [1, 2, 3, 4, 7]
