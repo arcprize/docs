@@ -1,14 +1,14 @@
 ---
-title: "ArcAgi"
+title: "Arcade"
 description: "ARC-AGI 3 Client for Interactive Environments"
 icon: "package"
 ---
 
-The `ArcAgi` class is the main entry point for interacting with ARC-AGI-3 environments. It handles configuration, environment discovery, and scorecard management.
+The `Arcade` class is the main entry point for interacting with ARC-AGI-3 environments. It handles configuration, environment discovery, and scorecard management.
 
 ## Constructor Parameters
 
-The `ArcAgi` constructor accepts the following parameters. All parameters can be overridden by environment variables, with constructor arguments taking precedence over environment variables.
+The `Arcade` constructor accepts the following parameters. All parameters can be overridden by environment variables, with constructor arguments taking precedence over environment variables.
 
 | Parameter | Type | Default | Environment Variable | Description |
 |-----------|------|---------|---------------------|-------------|
@@ -21,13 +21,13 @@ The `ArcAgi` constructor accepts the following parameters. All parameters can be
 
 **Example:**
 ```python
-from arc_agi import ArcAgi, OperationMode
+from arc_agi import Arcade, OperationMode
 
 # Use defaults (loads from environment variables or uses defaults)
-arc = ArcAgi()
+arc = Arcade()
 
 # Override specific parameters
-arc = ArcAgi(
+arc = Arcade(
     arc_api_key="my-key",
     operation_mode=OperationMode.OFFLINE,
     environments_dir="./my_games"

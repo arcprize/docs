@@ -20,7 +20,7 @@ The default environments directory is `environment_files` in the project root.
 The environments follow this directory structure:
 
 ```
-ARC-AGI-3-Environments/
+ARC-AGI/
 └── environment_files/
     └── <game-id>/
         └── <version>/
@@ -56,12 +56,12 @@ Each game version requires a `metadata.json` file:
 | `tags` | Optional tags for categorization |
 | `local_dir` | Relative path to game directory |
 
-4. **Test the new version** using ARC-AGI-3-Environments:
-```python
-from arc_agi import ArcAgi
+4. **Test the new version** using ARC-AGI:
+   ```python
+   from arc_agi
 
 # Initialize the ARC-AGI-3 client
-arc = ArcAgi()
+arc = arc_agi.Arcade()
 
 # Create an environment with terminal rendering
 env = arc.make("ls20-v2", render_mode="terminal")

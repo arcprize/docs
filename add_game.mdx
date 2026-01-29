@@ -17,7 +17,7 @@ This example walks through a simple game where randomly generated sprites appear
 Create the following structure:
 
 ```
-ARC-AGI-3-Environments/
+ARC-AGI/
 └── environment_files/
     └── <game-id>/
         └── <version>/
@@ -265,10 +265,10 @@ The `step()` method contains the main game logic:
 Run the game using the ARC-AGI-3 client and setting the random seed:
 
 ```python
-from arc_agi import ArcAgi
+import arc_agi
 
 # Initialize the ARC-AGI-3 client
-arc = ArcAgi()
+arc = arc_agi.Arcade()
 env = arc.make("ab12-v1", seed=0, render_mode="terminal")
 
 # Perform clicks (ACTION6 with x, y coordinates)
