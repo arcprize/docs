@@ -28,60 +28,106 @@
     "navigation": {
         "tabs": [
             {
-                "tab": "Documentation",
+                "tab": "Overview",
                 "groups": [
                     {
                         "group": "Get Started",
                         "pages": [
                             "index",
-                            "swarms"
+                            "api-keys"
                         ]
                     },
                     {
-                        "group": "Games",
+                        "group": "Core Concepts",
                         "pages": [
-                            "games",
-                            "scorecards",
-                            "actions",
-                            "recordings",
-                            "add_game",
-                            "edit_games"
-                        ]
-                    },
-                    {
-                        "group": "Agents",
-                        "pages": [
-                            "agents-quickstart",
-                            "llm_agents",
                             {
-                                "group": "Partner Templates",
-                                "icon": "copy",
+                                "group": "Games",
+                                "icon": "gamepad-2",
                                 "pages": [
-                                    "partner_templates/agentops",
-                                    "partner_templates/huggingface",
-                                    "partner_templates/anthropic",
-                                    "partner_templates/langchain"
+                                    "game-schema",
+                                    "available-games",
+                                    "actions"
+                                ]
+                            },
+                            {
+                                "group": "Scoring",
+                                "icon": "trophy",
+                                "pages": [
+                                    "methodology",
+                                    "scorecards"
+                                ]
+                            },
+                            "recordings",
+                            {
+                                "group": "Agents",
+                                "icon": "bot",
+                                "pages": [
+                                    "agents-quickstart",
+                                    "llm_agents",
+                                    {
+                                        "group": "Partner Templates",
+                                        "icon": "copy",
+                                        "pages": [
+                                            "partner_templates/agentops",
+                                            "partner_templates/huggingface",
+                                            "partner_templates/anthropic",
+                                            "partner_templates/langchain"
+                                        ]
+                                    }
                                 ]
                             }
                         ]
                     },
                     {
+                        "group": "Further Reading",
+                        "pages": [
+                            "local-vs-online",
+                            "full-play-test",
+                            "swarms"
+                        ]
+                    },
+                    {
                         "group": "Resources",
                         "pages": [
+                            "arc-agi-3",
+                            "feature-requests",
                             "contributing"
                         ]
                     }
                 ]
             },
             {
-                "tab": "ARC-AGI Toolkit",
+                "tab": "ARC-AGI SDK",
                 "groups": [
                     {
                         "group": "Get Started",
                         "pages": [
                             "toolkit/overview",
-                            "toolkit/repl",
-                            "toolkit/minimal"
+                            {
+                                "group": "Examples",
+                                "icon": "code",
+                                "pages": [
+                                    "toolkit/repl",
+                                    "toolkit/minimal"
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "group": "Guides",
+                        "pages": [
+                            "toolkit/list-games",
+                            "toolkit/list-actions",
+                            {
+                                "group": "Scorecards",
+                                "pages": [
+                                    "toolkit/get-scorecard",
+                                    "toolkit/create-scorecard",
+                                    "toolkit/close-scorecard"
+                                ]
+                            },
+                            "add_game",
+                            "edit_games"
                         ]
                     },
                     {
@@ -94,7 +140,7 @@
                 ]
             },
             {
-                "tab": "REST API Guide",
+                "tab": "REST API",
                 "openapi": "arc3v1.yaml",
                 "groups": [
                     {

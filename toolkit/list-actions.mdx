@@ -1,0 +1,82 @@
+---
+title: "List Available Actions"
+description: "How to retrieve available actions for a game using the ARC-AGI SDK"
+---
+
+## Overview
+
+Each ARC-AGI game has its own set of available actions. Before interacting with a game, you can check which actions are supported using the `action_space` property.
+
+## Listing Actions for a Game
+
+Once you've created an environment, use `action_space` to see what actions are available:
+
+```python
+import arc_agi
+
+arc = arc_agi.Arcade()
+env = arc.make("ls20", render_mode="terminal")
+
+# Get available actions
+actions = env.action_space
+for action in actions:
+    print(action.name)
+```
+
+## Understanding Action Information
+
+Each action in the list is a `GameAction` object. You can inspect its properties:
+
+```python
+actions = env.action_space
+
+for action in actions:
+    print(f"Name: {action.name}")
+    print(f"Is complex: {action.is_complex()}")
+    print("---")
+```
+
+Complex actions (like `ACTION6`) require additional data such as x,y coordinates when called.
+
+## Actions Update Each Step
+
+The available actions can change as you play. After each step, check `action_space` for the current set of valid actions:
+
+```python
+from arcengine import GameAction
+
+# Initial actions
+print(f"Initial actions: {[a.name for a in env.action_space]}")
+
+# Take an action
+obs = env.step(GameAction.ACTION1)
+
+# Actions may have changed
+print(f"Current actions: {[a.name for a in env.action_space]}")
+```
+
+## Using Actions in Your Agent
+
+Below is a an example of picking a random action from those available:
+
+```python
+import random
+from arcengine import GameAction
+
+actions = env.action_space
+
+# Choose a random available action
+action = random.choice(actions)
+
+# Handle complex actions that need coordinates
+action_data = {}
+if action.is_complex():
+    action_data = {"x": 32, "y": 32}
+
+obs = env.step(action, data=action_data)
+```
+
+## Next Steps
+
+- [Learn about all available actions](/actions)
+- [Build a game-playing script](./minimal)

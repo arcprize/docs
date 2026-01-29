@@ -1,0 +1,152 @@
+---
+title: "Full Play Test"
+description: "What happens under the hood when running an ARC-AGI-3 game"
+icon: "play"
+---
+
+This shows what happens "under the hood" when you run commands like `uv run main.py --agent=random --game=ls20`. Below is the full workflow for running a game programmatically.
+
+## Game State Enumeration
+
+| State | Description |
+|-------|-------------|
+| `NOT_FINISHED` | Game is active and awaiting next action |
+| `WIN` | Objective completed successfully |
+| `GAME_OVER` | Game terminated due to the max actions reached or other conditions |
+
+## Full Playtest Example
+
+This is a bare-bones example (for educational purposes) also available as a [notebook](https://colab.research.google.com/drive/1Bt4PU6Xl_avLPV70hNAyReXaRqFDhifJ?usp=sharing).
+
+```python
+#!/usr/bin/env python3
+"""
+Simple demo showing what a swarm agent does under the hood.
+This is a bare-bones example for educational purposes.
+"""
+
+import json
+import os
+import random
+import requests
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv(dotenv_path=".env")
+
+# Setup
+ROOT_URL = "https://three.arcprize.org"
+API_KEY = os.getenv("ARC_API_KEY")
+
+# Create a session with headers
+session = requests.Session()
+session.headers.update({
+    "X-API-Key": API_KEY,
+    "Accept": "application/json"
+})
+
+print("=== MANUAL SWARM DEMO ===")
+print("This shows what happens when an agent plays an ARC game.\n")
+
+# Step 1: Get available games
+print("STEP 1: Getting list of games...")
+response = session.get(f"{ROOT_URL}/api/games")
+games = [g["game_id"] for g in response.json()]
+print(f"Found {len(games)} games")
+
+# Pick a random game
+game_id = random.choice(games)
+print(f"Selected game: {game_id}\n")
+
+# Step 2: Open a scorecard (tracks performance)
+print("STEP 2: Opening scorecard...")
+response = session.post(
+    f"{ROOT_URL}/api/scorecard/open",
+    json={"tags": ["manual_demo"]}
+)
+card_id = response.json()["card_id"]
+print(f"Scorecard ID: {card_id}\n")
+
+# Step 3: Start the game
+print("STEP 3: Starting game with RESET action...")
+url = f"{ROOT_URL}/api/cmd/RESET"
+print(f"URL: {url}")
+response = session.post(
+    url,
+    json={
+        "game_id": game_id,
+        "card_id": card_id
+    }
+)
+
+# Check if response is valid
+if response.status_code != 200:
+    print(f"Error: {response.status_code} - {response.text}")
+    exit()
+
+game_data = response.json()
+guid = game_data["guid"]
+state = game_data["state"]
+score = game_data.get("score", 0)
+print(f"Game started! State: {state}, Score: {score}\n")
+
+# Step 4: Play with random actions (max 5 actions)
+print("STEP 4: Taking random actions...")
+actions = ["ACTION1", "ACTION2", "ACTION3", "ACTION4", "ACTION5", "ACTION6", "ACTION7"]
+
+for i in range(5):
+    # Check if game is over
+    if state in ["WIN", "GAME_OVER"]:
+        print(f"\nGame ended! Final state: {state}, Score: {score}")
+        break
+
+    # Pick a random action
+    action = random.choice(actions)
+
+    # Build request data
+    request_data = {
+        "game_id": game_id,
+        "card_id": card_id,
+        "guid": guid
+    }
+
+    # ACTION6 needs x,y coordinates
+    if action == "ACTION6":
+        request_data["x"] = random.randint(0, 29)
+        request_data["y"] = random.randint(0, 29)
+        print(f"Action {i+1}: {action} at ({request_data['x']}, {request_data['y']})", end="")
+    else:
+        print(f"Action {i+1}: {action}", end="")
+
+    # Take the action
+    response = session.post(
+        f"{ROOT_URL}/api/cmd/{action}",
+        json=request_data
+    )
+
+    game_data = response.json()
+    state = game_data["state"]
+    score = game_data.get("score", 0)
+    print(f" -> State: {state}, Score: {score}")
+
+# Step 5: Close scorecard
+print("\nSTEP 5: Closing scorecard...")
+response = session.post(
+    f"{ROOT_URL}/api/scorecard/close",
+    json={"card_id": card_id}
+)
+scorecard = response.json()
+print("Scorecard closed!")
+print(f"\nView results at: {ROOT_URL}/scorecards/{card_id}")
+
+print("\n=== DEMO COMPLETE ===")
+print("\nThis is what every agent does:")
+print("1. Get games list")
+print("2. Open a scorecard")
+print("3. Reset to start the game")
+print("4. Take actions based on its strategy (we used random)")
+print("5. Close the scorecard when done")
+print("\nThe real agents use smarter strategies instead of random!")
+```
+
+This workflow ensures your plays are tracked officially. For parallel playtests across games, use a [swarm](/swarms) to handle the orchestration automatically.

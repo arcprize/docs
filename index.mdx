@@ -11,8 +11,7 @@ mode: "wide"
   <div style={{ flex: 1 }}>
     <p>
       Traditionally, to measure AI, static benchmarks have been the yardstick.
-      These continue to work well for evaluating things like LLMs and AI
-      reasoning systems. However, to evaluate frontier AI agent systems, we
+      These work well for evaluating LLMs and AI reasoning systems. However, to evaluate frontier AI agent systems, we
       need new tools that measure:
     </p>
 
@@ -26,11 +25,7 @@ mode: "wide"
 
     <p>
       By building agents that can play ARC-AGI-3, you're directly contributing
-      to the frontier of AI research. Watch the{' '}
-      <a href="https://www.youtube.com/watch?v=xEVg9dcJMkw">
-        Quick Start tutorial video
-      </a>
-      . Learn more about{' '}
+      to the frontier of AI research. <br/><br/> Learn more about{' '}
       <a href="https://three.arcprize.org/">ARC-AGI-3</a>.
     </p>
   </div>
@@ -45,45 +40,59 @@ mode: "wide"
   </div>
 </div>
 
-## Run your first agent against ARC-AGI-3
+## Play your first ARC-AGI-3 environment
 
-### 1. Install [uv](https://docs.astral.sh/uv/)
-
-```bash
-curl -LsSf https://astral.sh/uv/install.sh | sh
-```
-
-### 2. Clone and install the [ARC-AGI-3-Agents Repo](https://github.com/arcprize/ARC-AGI-3-Agents)
+### 1. Install the [ARC-AGI Toolkit](https://github.com/arcprize/arc-agi)
 
 ```bash
-git clone https://github.com/arcprize/ARC-AGI-3-Agents.git && cd ARC-AGI-3-Agents && uv sync
+uv add arc-agi
+# or
+pip install arc-agi
 ```
 
-### 3. Set up environment variables
+### 2. Set your `ARC_API_KEY`
+Optionally set your `ARC_API_KEY`. If no key is provided, an anonymous key will be used. However, registering for an API key will give you access to public games at release. [Get an ARC_API_KEY](/api-keys)
 
 ```bash
-cp .env-example .env
+export ARC_API_KEY="your-api-key-here"
+# or
+echo 'ARC_API_KEY=your-api-key-here' > .env
 ```
 
-You will need to set the `ARC_API_KEY` in the `.env` file. You can get your ARC_API_KEY from your user profile after registration on the [ARC-AGI-3 website](https://three.arcprize.org).
+### 3. Play your first game
 
-### 4. Run your first agent
+Create a file called `my-play.py`:
+
+```python
+import arc_agi
+from arcengine import GameAction
+
+arc = arc_agi.Arcade()
+env = arc.make("ls20", render_mode="terminal")
+
+# Take a few actions
+for _ in range(10):
+    env.step(GameAction.ACTION1)
+
+print(arc.get_scorecard())
+```
+
+Run it:
 
 ```bash
-# Run 'random' agent against 'ls20' game
-uv run main.py --agent=random --game=ls20
+python play.py
 ```
 
-🎉 **Congratulations!** You just ran your first agent against ARC-AGI-3. A link to view your agent's replay ([example replay](https://three.arcprize.org/replay/ls20-016295f7601e/493202a6-81dc-4e75-bc51-f21174b28b29)) is provided in the output.
+You should see the game render in your terminal and a scorecard with your results.
+
+🎉 Congratulations! You just played your first ARC-AGI-3 environment programatically.
+
+Do you feel the AGI yet?
 
 ## Next Steps
 
-After running your first agent:
+After running your first environment:
 
-1. **Explore your agent's scorecard** - View your scorecard (ex: `https://three.arcprize.org/scorecards/<scorecard_id>`)
-2. **Explore a game's replay** - Via your scorecard, view the per-game replays of your agent (ex: `https://three.arcprize.org/replay/ls20-016295f7601e/794795bf-d05f-4bf5-885a-b8a8f37a89fd`)
-3. **Try a different game** - Run `uv run main.py --agent=random --game=<>` See a list of games available at three.arcprize.org or via [api](/api-reference/games/list-available-games)
-4. **Try using a LLM** - Try `uv run main.py --agent=llm --game=ls20` (requires an `OPENAI_API_KEY` in `.env`) or explore other [templates](/partner_templates/langchain).
-5. **Build your own agent** - Follow the [Agents Quickstart](./agents-quickstart) guide and [view the agent tutorial](https://www.youtube.com/watch?v=xEVg9dcJMkw).
-6. **Integrate Easily** - [The ARC-AGI Toolkit](./toolkit/overview) allows quick and easy integration with ARC-AGI Interactive Environments.
-7. **Edit or build your own Environments** - [Edit](./edit_games) or [make](./add_game) your own Environments easily. 
+1. **Try a different game** - Run `env = arc.make("ft09", render_mode="terminal")` to play a another game. See a list of games available at [three.arcprize.org](https://three.arcprize.org/) or via the [ARC-AGI SDK](/toolkit/list-games)
+2. **Try using an agent** - Explore [agent templates](/llm_agents) or [create your own agent](/agents-quickstart).
+4. **Explore the ARC-AGI Toolkit** - [The ARC-AGI Toolkit](./toolkit/overview) allows quick and easy integration with ARC-AGI Environments.

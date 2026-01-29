@@ -1,0 +1,85 @@
+---
+title: "List Games"
+description: "How to list available games using the ARC-AGI SDK"
+---
+
+## Overview
+
+The ARC-AGI SDK provides access to a variety of interactive puzzle environments. Before playing, you can discover what games are available using the `get_environments()` method.
+
+## Listing All Available Games
+
+Use `get_environments()` to retrieve all games you have access to:
+
+```python
+import arc_agi
+
+arc = arc_agi.Arcade()
+games = arc.get_environments()
+
+for game in games:
+    print(f"{game.game_id}: {game.title}")
+```
+
+This returns both local games (from your `environment_files` directory) and remote games available via the API.
+
+## Working with Game Information
+
+Each game in the list is an `EnvironmentInfo` object with useful properties:
+
+```python
+games = arc.get_environments()
+
+for game in games:
+    print(f"ID: {game.game_id}")
+    print(f"Title: {game.title}")
+    print(f"Tags: {game.tags}")
+    print("---")
+```
+
+## Selecting a Game to Play
+
+Once you've found a game you want to play, use its `game_id` with the `make()` method:
+
+```python
+# List games and pick one
+games = arc.get_environments()
+print(f"Found {len(games)} games available")
+
+# Play the first game
+if games:
+    game_id = games[0].game_id
+    env = arc.make(game_id, render_mode="terminal")
+```
+
+## Local vs Remote Games
+
+The games returned depend on your operation mode:
+
+| Mode | Games Returned |
+|------|----------------|
+| `NORMAL` (default) | Local + Remote games |
+| `ONLINE` | Remote games only |
+| `OFFLINE` | Local games only |
+
+```python
+from arc_agi import Arcade, OperationMode
+
+# List both local and remote games (default)
+arc = Arcade(operation_mode=OperationMode.NORMAL)
+all_games = arc.get_environments()
+
+# List only local games
+arc = Arcade(operation_mode=OperationMode.OFFLINE)
+local_games = arc.get_environments()
+
+# List only remote games
+arc = Arcade(operation_mode=OperationMode.ONLINE)
+remote_games = arc.get_environments()
+```
+
+## Next Steps
+
+- [Play a game using the REPL](./repl)
+- [Build a game-playing script](./minimal)
+- [Learn about game actions](/actions)

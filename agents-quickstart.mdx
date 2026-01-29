@@ -7,6 +7,8 @@ icon: "bot"
 
 Create AI agents that can play ARC-AGI-3 games by implementing the required interface methods. The following is based off the [ARC-AGI-3 Agents repo](https://github.com/arcprize/ARC-AGI-3-Agents).
 
+ Watch the [Agent Quick Start tutorial video](https://www.youtube.com/watch?v=xEVg9dcJMkw).
+
 ## Adding and Running Your Own Agent
 
 Follow these three steps to create and run a new agent.
@@ -98,6 +100,9 @@ You can also run it against all available games:
 # Run your agent on all games
 uv run main.py --agent=myawesomeagent
 ```
+TODO: Fix with agent flow
+1. **Explore your agent's scorecard** - View your scorecard (ex: `https://three.arcprize.org/scorecards/<scorecard_id>`)
+2. **Explore a game's replay** - Via your scorecard, view the per-game replays of your agent (ex: `https://three.arcprize.org/replay/ls20-016295f7601e/794795bf-d05f-4bf5-885a-b8a8f37a89fd`)
 
 That's it! The `main.py` script handles looking up your agent in the registry, instantiating it, and running it against the specified games.
 
