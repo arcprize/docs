@@ -64,6 +64,7 @@
                                 "pages": [
                                     "agents-quickstart",
                                     "llm_agents",
+                                    "benchmarking-agent",
                                     {
                                         "group": "Partner Templates",
                                         "icon": "copy",
