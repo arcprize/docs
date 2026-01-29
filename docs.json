@@ -73,7 +73,8 @@
                                             "partner_templates/anthropic",
                                             "partner_templates/langchain"
                                         ]
-                                    }
+                                    },
+                                    "create-agent"
                                 ]
                             }
                         ]
@@ -89,6 +90,7 @@
                     {
                         "group": "Resources",
                         "pages": [
+                            "vocabulary",
                             "arc-agi-3",
                             "feature-requests",
                             "contributing"
@@ -103,21 +105,20 @@
                         "group": "Get Started",
                         "pages": [
                             "toolkit/overview",
-                            {
-                                "group": "Examples",
-                                "icon": "code",
-                                "pages": [
-                                    "toolkit/repl",
-                                    "toolkit/minimal"
-                                ]
-                            }
+                            "toolkit/minimal"
                         ]
                     },
                     {
                         "group": "Guides",
                         "pages": [
-                            "toolkit/list-games",
-                            "toolkit/list-actions",
+                            {
+                                "group": "Games",
+                                "pages": [
+                                    "toolkit/list-games",
+                                    "add_game",
+                                    "edit_games"
+                                ]
+                            },
                             {
                                 "group": "Scorecards",
                                 "pages": [
@@ -126,8 +127,8 @@
                                     "toolkit/close-scorecard"
                                 ]
                             },
-                            "add_game",
-                            "edit_games"
+                            "toolkit/list-actions",
+                            "toolkit/render-games"
                         ]
                     },
                     {

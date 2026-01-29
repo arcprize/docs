@@ -8,37 +8,118 @@ The `Arcade` class is the main entry point for interacting with ARC-AGI-3 enviro
 
 ## Constructor Parameters
 
-The `Arcade` constructor accepts the following parameters. All parameters can be overridden by environment variables, with constructor arguments taking precedence over environment variables.
+The `Arcade` constructor accepts the following parameters. All parameters can be overridden by environment variables, with constructor arguments taking precedence.
 
-| Parameter | Type | Default | Environment Variable | Description |
-|-----------|------|---------|---------------------|-------------|
-| `arc_api_key` | `str` | `""` | `ARC_API_KEY` | API key for ARC API. If empty and not in offline mode, an anonymous key will be automatically fetched. |
-| `arc_base_url` | `str` | `"https://three.arcprize.org"` | `ARC_BASE_URL` | Base URL for the ARC API. |
-| `operation_mode` | `OperationMode` | `OperationMode.NORMAL` | `OPERATION_MODE` | `NORMAL` (local + API), `ONLINE` (API only), or `OFFLINE` (local only). |
-| `environments_dir` | `str` | `"environment_files"` | `ENVIRONMENTS_DIR` | Directory to scan for local `metadata.json` files. |
-| `recordings_dir` | `str` | `"recordings"` | `RECORDINGS_DIR` | Directory to save game recordings (JSONL format). |
-| `logger` | `logging.Logger` | `None` | - | Optional logger instance. If not provided, a default logger logging to STDOUT is created. |
+```python
+from arc_agi import Arcade, OperationMode
+import logging
 
-**Example:**
+arc = Arcade(
+    operation_mode=OperationMode.OFFLINE,
+    arc_api_key="your-api-key",
+    environments_dir="./my_games",
+    recordings_dir="./my_recordings",
+    arc_base_url="https://three.arcprize.org",
+    logger=logging.getLogger("my_agent")
+)
+```
+
+<Note>
+All parameters are optional. See details below for each option.
+</Note>
+
+### `operation_mode`
+
+Controls where games are loaded from. See [Local vs Online](/local-vs-online) for guidance on which mode to use.
+
+| Mode | Description |
+|------|-------------|
+| `OperationMode.NORMAL` | Load both local and remote games (default) |
+| `OperationMode.OFFLINE` | Load local games only — fast, no rate limits |
+| `OperationMode.ONLINE` | Load remote games only — enables scorecards and replays |
+
 ```python
 from arc_agi import Arcade, OperationMode
 
-# Use defaults (loads from environment variables or uses defaults)
+# Default: both local and remote games
 arc = Arcade()
 
-# Override specific parameters
-arc = Arcade(
-    arc_api_key="my-key",
-    operation_mode=OperationMode.OFFLINE,
-    environments_dir="./my_games"
-)
+# Local only (recommended for development)
+arc = Arcade(operation_mode=OperationMode.OFFLINE)
+
+# Remote only (for scorecards and replays)
+arc = Arcade(operation_mode=OperationMode.ONLINE)
+```
+
+You can also set this via environment variable:
+
+```bash
+export OPERATION_MODE=OFFLINE
+```
+
+### `arc_api_key`
+
+API key for the ARC API. Required for `ONLINE` mode. If empty and not in offline mode, an anonymous key will be automatically fetched.
+
+```python
+# Explicitly set API key
+arc = Arcade(arc_api_key="your-api-key")
+
+# Or use environment variable (recommended)
+# export ARC_API_KEY="your-api-key"
+arc = Arcade()
+```
+
+See [API Keys](/api-keys) for setup instructions.
+
+### `environments_dir`
+
+Directory to scan for local game files (`metadata.json`). Default: `"environment_files"`.
+
+```python
+arc = Arcade(environments_dir="./my_games")
+```
+
+Environment variable: `ENVIRONMENTS_DIR`
+
+### `recordings_dir`
+
+Directory to save game recordings in JSONL format. Default: `"recordings"`.
+
+```python
+arc = Arcade(recordings_dir="./my_recordings")
+```
+
+Environment variable: `RECORDINGS_DIR`
+
+### `arc_base_url`
+
+Base URL for the ARC API. Default: `"https://three.arcprize.org"`.
+
+```python
+arc = Arcade(arc_base_url="https://custom-endpoint.example.com")
+```
+
+Environment variable: `ARC_BASE_URL`
+
+### `logger`
+
+Optional logger instance. If not provided, a default logger logging to STDOUT is created.
+
+```python
+import logging
+
+my_logger = logging.getLogger("my_agent")
+arc = Arcade(logger=my_logger)
 ```
 
 ## Methods
 
-### `make(game_id, seed=0, scorecard_id=None, save_recording=False, render_mode=None, renderer=None)`
+### `make()`
 
 Create and initialize an environment wrapper for a specific game.
+
+**Signature:** `make(game_id, seed=0, scorecard_id=None, save_recording=False, render_mode=None, renderer=None)`
 
 **Parameters:**
 - `game_id` (`str`): Game identifier in format `'ls20'` or `'ls20-1234abcd'`. The first 4 characters are the game_id, everything after `'-'` is the version.
@@ -71,9 +152,11 @@ for env in envs:
     print(f"{env.game_id}: {env.title}")
 ```
 
-### `create_scorecard(source_url=None, tags=None, opaque=None)`
+### `create_scorecard()`
 
 Create a new scorecard for tracking game runs.
+
+**Signature:** `create_scorecard(source_url=None, tags=None, opaque=None)`
 
 **Parameters:**
 - `source_url` (`str`, optional): Optional source URL for the scorecard.
@@ -91,18 +174,22 @@ scorecard_id = arc.create_scorecard(
 )
 ```
 
-### `open_scorecard(source_url=None, tags=None, opaque=None)`
+### `open_scorecard()`
 
 Alias for `create_scorecard()`. Opens a new scorecard.
+
+**Signature:** `open_scorecard(source_url=None, tags=None, opaque=None)`
 
 **Parameters:** Same as `create_scorecard()`.
 
 **Returns:**
 - `str`: The ID of the newly created scorecard.
 
-### `get_scorecard(scorecard_id=None)`
+### `get_scorecard()`
 
 Get a scorecard by ID, converted to `EnvironmentScorecard`.
+
+**Signature:** `get_scorecard(scorecard_id=None)`
 
 **Parameters:**
 - `scorecard_id` (`str`, optional): Scorecard ID. If `None` is provided (the default), returns the default scorecard that the system is currently using (the same one created automatically when `make()` is called with `scorecard_id=None`).
@@ -118,9 +205,11 @@ if scorecard:
     print(f"Games played: {len(scorecard.games)}")
 ```
 
-### `close_scorecard(scorecard_id=None)`
+### `close_scorecard()`
 
 Close a scorecard and return the final scorecard data.
+
+**Signature:** `close_scorecard(scorecard_id=None)`
 
 **Parameters:**
 - `scorecard_id` (`str`, optional): Scorecard ID. If `None` is provided (the default), closes the default scorecard that the system is currently using (the same one created automatically when `make()` is called with `scorecard_id=None`). After closing, the default scorecard is cleared and a new one will be created on the next `make()` call.

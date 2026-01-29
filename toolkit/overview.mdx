@@ -1,34 +1,56 @@
 ---
-title: "Overview"
-description: "ARC-AGI Toolkit"
+title: "ARC-AGI Toolkit Quickstart"
+description: "Getting started with the ARC-AGI Toolkit"
+sidebarTitle: "Quickstart"
 icon: "file"
 ---
 
-ARC-AGI Toolkit is an open-sourced python interface (API) for ARC-AGI-3 interactive environments. It provides a consistent API and tooling layer that lets agents interact with ARC-AGI-3 environments, locally or via API.
+The ARC-AGI Toolkit is an open-source Python SDK for ARC-AGI-3 environments, geared towards researchers looking to make progress on ARC-AGI-3.
+
+The SDK enables:
+- **Local development** — Run your agents locally without needing the API, built on top of the [ARC-AGI-3 game engine](https://github.com/arcprize/ARCEngine)
+- **Customization** — Edit existing games and create new ones
+- **Flexibility** — Interact with environments locally or via API
 
 ## QuickStart
 
-### Prerequisites
+### 1. Install the SDK
 
-1. **Installation**:
-   ```bash
-   uv add arc-agi
-   # or
-   pip install arc-agi
-   ```
+```bash
+uv add arc-agi
+# or
+pip install arc-agi
+```
 
-2. **API Key**: You can optionally set the `ARC_API_KEY` environment variable with your API key. If no key is provided, an anonymous key will be used. However, registering for an API key will give you access to more games at release. [Register for an API key at https://three.arcprize.org](https://three.arcprize.org)
-   
-   The code supports loading from `.env` and `.env.example` files (using python-dotenv), or you can set it directly:
-   ```bash
-   export ARC_API_KEY="your-api-key-here"
-   ```
-   
-   Or create a `.env` file in your project root:
-   ```bash
-   echo 'ARC_API_KEY=your-api-key-here' > .env
-   ```
+### 2. Set your API key (optional)
 
-## Up Next
+```bash
+export ARC_API_KEY="your-api-key-here"
+```
 
-Interact with your first environments vai the [Python REPL](./repl) or via a [Python Script](./minimal)
+If no key is provided, an anonymous key will be used. See [API Keys](/api-keys) for more details.
+
+### 3. Play a game
+
+```python
+import arc_agi
+from arcengine import GameAction
+
+arc = arc_agi.Arcade()
+env = arc.make("ls20", render_mode="terminal")
+
+# See available actions
+print(env.action_space)
+
+# Take an action
+obs = env.step(GameAction.ACTION1)
+
+# Check your scorecard
+print(arc.get_scorecard())
+```
+
+## Next Steps
+
+- [Minimal Example](./minimal) — A complete script example
+- [List Games](./list-games) — Discover available games
+- [Local vs Online](/local-vs-online) — Choose how to run games

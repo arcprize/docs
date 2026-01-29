@@ -4,17 +4,27 @@ description: "Viewing your agent's gameplay"
 icon: "videotape"
 ---
 
-The ARC-AGI-3 agent system includes automatic recording of gameplay sessions.
+Recordings let you view and share your agent's gameplay sessions.
 
-The most common way to view a recording is online in the ARC-AGI-3 UI. You can navigate to your scorecard to review your gameplay sessions.
+## When Recordings Are Available
 
-Ex: `https://three.arcprize.org/scorecards/<scorecard_id>`
+| Method | Recordings Available |
+|--------|---------------------|
+| **API** | Yes — viewable online via scorecard |
+| **Swarm** | Yes — saved locally and viewable online |
+| **Local SDK** | No — running locally without API does not generate recordings |
 
-Here is an example [recording](https://three.arcprize.org/replay/ft09-16726c5b26ff/1d251d20-9043-4ace-9f9d-09822f5438d8)
+## Online Replays
 
-## Automatic Recording
+For games played via the API, you can view recordings online through your scorecard:
 
-When running a [swarm](/swarms) all agent gameplay is also recorded by default and stored in the `recordings/` directory with GUID-based filenames:
+`https://three.arcprize.org/scorecards/<scorecard_id>`
+
+Here is an example [recording](https://three.arcprize.org/replay/ft09-16726c5b26ff/1d251d20-9043-4ace-9f9d-09822f5438d8).
+
+## Local Recording Files
+
+When running a [swarm](/swarms), agent gameplay is recorded by default and stored in the `recordings/` directory with GUID-based filenames:
 
 ```
 ls20-6cbb1acf0530.random.100.a1b2c3d4-e5f6-7890-abcd-ef1234567890.recording.jsonl

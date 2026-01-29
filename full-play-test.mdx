@@ -4,7 +4,15 @@ description: "What happens under the hood when running an ARC-AGI-3 game"
 icon: "play"
 ---
 
-This shows what happens "under the hood" when you run commands like `uv run main.py --agent=random --game=ls20`. Below is the full workflow for running a game programmatically.
+This page demonstrates how to interact with the ARC-AGI-3 API directly using HTTP requests. This is useful for understanding what happens "under the hood" when running a game.
+
+<Note>
+**Recommended approach:** For most use cases, we recommend using the [ARC-AGI SDK](/toolkit/minimal) instead of calling the API directly. The SDK handles authentication, error handling, and provides a simpler interface.
+</Note>
+
+## Direct API Workflow
+
+Below is the full workflow for running a game programmatically via the API.
 
 ## Game State Enumeration
 

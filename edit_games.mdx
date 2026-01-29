@@ -6,13 +6,19 @@ description: "A guide to modifying games in ARC-AGI-3 Environments"
 
 ### Environment Configuration
 
-Game files are stored in an environments directory. Configure this in your `.env` file:
+Game files are stored in an environments directory. The default is `environment_files` in the project root.
+
+You can configure this in your `.env` file:
 
 ```dotenv
 environments_dir = my_environments
 ```
 
-The default environments directory is `environment_files` in the project root.
+Or specify it directly when initializing the client:
+
+```python
+arc = arc_agi.Arcade(environments_dir="./my_environments")
+```
 
 ### Directory Structure
 
@@ -21,59 +27,68 @@ The environments follow this directory structure:
 ```
 ARC-AGI/
 └── environment_files/
-    └── <game-id>/
-        └── <version>/
-            ├── <game-id>      # Main game file
-            └── metadata.json      # Game metadata
+    └── ls20/
+        └── v1/
+            ├── ls20.py           # Main game file
+            └── metadata.json     # Game metadata
 ```
+
 ### Creating a New Version
 
-To create a new version of an existing game:
+Copy your existing version folder to create a new version:
 
-1. **Create a new version folder** in the game directory:
-   ```
-   environment_files/ls20/v2/
-   ```
+<CodeGroup>
+```bash Mac/Linux
+cp -r environment_files/ls20/v1 environment_files/ls20/v2
+```
 
-2. **Copy and modify the game file** (`ls20.py`) with your changes
+```bash Windows
+xcopy environment_files\ls20\v1 environment_files\ls20\v2\ /E /I
+```
+</CodeGroup>
 
-3. **Copy and modify the metadata.json** with the new version:
+Your directory now looks like this:
+
+```
+ARC-AGI/
+└── environment_files/
+    └── ls20/
+        ├── v1/
+        │   ├── ls20.py
+        │   └── metadata.json
+        └── v2/                   # your new version
+            ├── ls20.py
+            └── metadata.json
+```
+
+Then update `metadata.json` with the new version ([more info](/add_game#metadata-file)):
+
 ```json
 {
   "game_id": "ls20-v2",
   "default_fps": 5,
   "local_dir": "environment_files\\ls20\\v2"
 }
-   ```
-Each game version requires a `metadata.json` file:
+```
 
-| Field | Description |
-|-------|-------------|
-| `game_id` | Unique identifier in format `{4 character game-id}-{version}` |
-| `default_fps` | Frames per second for playback |
-| `baseline_actions` | Array of average action counts per level of baseline performance |
-| `tags` | Optional tags for categorization |
-| `local_dir` | Relative path to game directory |
+Test the new version:
 
-4. **Test the new version** using ARC-AGI:
-   ```python
-   from arc_agi
+```python
+import arc_agi
 
-# Initialize the ARC-AGI-3 client
 arc = arc_agi.Arcade()
-
-# Create an environment with terminal rendering
 env = arc.make("ls20-v2", render_mode="terminal")
 ```
 ---
 ## Editing the Game File
 
-The main game logic resides in `game-id.py` and game-id is a  Unique 4-character identifier starting with a letter. 
-This file contains:
+The main game logic resides in `game-id.py`. This file contains:
 
-- **`sprites` dictionary** - Defines all sprite templates with pixel arrays and properties
-- **`levels` array** - Contains `Level()` objects with sprite placements and configuration
-- **Game class** - Extends `ARCBaseGame` and implements gameplay mechanics and logic
+| Name | Type | Description |
+|------|------|-------------|
+| `sprites` | `dict[str, Sprite]` | Sprite templates with pixel arrays and properties |
+| `levels` | `list[Level]` | Level objects with sprite placements and configuration |
+| `GameId` | `class(ARCBaseGame)` | Game class implementing gameplay mechanics and logic |
 ```python
 # Typical structure of game-id.py
 
@@ -233,4 +248,4 @@ Note the game loop keeps calling `step()` until `complete_action()` is called.
 
 ## Further Reading
 
-For more detailed information refer to the **ARC Engine Documentation**.
+For more detailed information refer to the [ARC Engine](https://github.com/arcprize/ARCEngine).

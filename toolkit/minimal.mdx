@@ -1,6 +1,7 @@
 ---
-title: "Minimal"
-description: "ARC-AGI Minimal Python Example"
+title: "Sample ARC-AGI SDK Agent"
+sidebarTitle: "Sample Agent"
+description: "An example agent that interacts with ARC-AGI-3 locally"
 icon: "python"
 ---
 
@@ -48,31 +49,6 @@ if scorecard:
     print(f"Final Score: {scorecard.score}")
 ```
 
-### Rendering Options
-
-You can render games in two ways:
-
-1. **Terminal rendering** (text-based, default_fps bounded):
-   ```python
-   env = arc.make("ls20", render_mode="terminal")
-   ```
-
-2. **Terminal rendering** (text-based, unbounded):
-   ```python
-   env = arc.make("ls20", render_mode="terminal-fast")
-   ```
-
-3. **Human rendering** (matplotlib visualization, default_fps bounded):
-   ```python
-   env = arc.make("ls20", render_mode="human")
-   ```
-
-4. **Custom renderer** (provide your own function):
-   ```python
-   from arcengine import FrameDataRaw
-   
-   def my_renderer(steps: int, frame_data: FrameDataRaw) -> None:
-       print(f"Step {steps}: {frame_data.state.name}")
-   
-   env = arc.make("ls20", renderer=my_renderer)
-   ```
+<Note>
+This example uses `render_mode="terminal"` to display the game in your terminal. If the game appears wrapped or distorted, try enlarging your terminal window or zooming out (Cmd/Ctrl + minus). For other rendering options, see [Render Games](./render-games).
+</Note>
