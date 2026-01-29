@@ -1,0 +1,29 @@
+---
+title: "Game Schema"
+description: "Structure and format of ARC-AGI-3 game environments"
+---
+
+ARC-AGI-3 games are turn-based environments where agents interact with 2D grids through a standardized action interface. Each game maintains state through discrete action-response cycles.
+
+- Agents receive 1-N frames of JSON objects with the game state and metadata.
+- Agents respond with an [action](/actions) to interact with the game.
+
+## Grid Structure
+
+- **Dimensions:** Maximum 64x64 grid size
+- **Cell Values:** Integer values 0-15 representing different states/colors
+- **Coordinate System:** (0,0) at top-left, (x,y) format
+
+## Game ID Format
+
+Game IDs are formatted as `<game_name>`-`<version>`.
+
+`game_names` are stable, but `version` may change as games update.
+
+## Game Available Actions
+
+Each game provides an explicit set of available actions. The actions available vary per game and are stated explicitly so your agent knows what it can do.
+
+To learn about the standardized action interface, see the [Actions](/actions) page.
+
+To see how to retrieve a game's available actions programmatically, see [List Available Actions](/toolkit/list-actions).

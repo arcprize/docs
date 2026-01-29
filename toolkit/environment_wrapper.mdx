@@ -1,0 +1,101 @@
+---
+title: "EnvironmentWrapper"
+description: "Generic Python Interface for Interacting with ARC-AGI 3 Environments"
+icon: "package"
+---
+
+The `EnvironmentWrapper` class provides a common interface for interacting with environments, whether they are local (`LocalEnvironmentWrapper`) or remote (`RemoteEnvironmentWrapper`).
+
+## Properties
+
+### `observation_space`
+
+Get the observation space (last response data).
+
+**Returns:**
+- `FrameDataRaw` or `None`: The `FrameDataRaw` object from the last response, or `None` if no response has been set yet.
+
+**Example:**
+```python
+obs = env.observation_space
+if obs:
+    print(f"Game state: {obs.state}")
+    print(f"Levels completed: {obs.levels_completed}")
+```
+
+### `action_space`
+
+Get the action space (available actions).
+
+**Returns:**
+- `list[GameAction]`: A list of `GameAction` objects representing available actions. Returns an empty list if no response has been set yet.
+
+**Example:**
+```python
+actions = env.action_space
+print(f"Available actions: {[a.name for a in actions]}")
+```
+
+### `info`
+
+Get the environment information.
+
+**Returns:**
+- `EnvironmentInfo`: The `EnvironmentInfo` object for this environment.
+
+**Example:**
+```python
+info = env.info
+print(f"Game ID: {info.game_id}")
+print(f"Title: {info.title}")
+print(f"Tags: {info.tags}")
+```
+
+## Methods
+
+### `reset()`
+
+Reset the environment and return the initial frame data.
+
+**Returns:**
+- `FrameDataRaw` or `None`: `FrameDataRaw` object with initial game state, or `None` if reset failed.
+
+**Example:**
+```python
+obs = env.reset()
+if obs:
+    print("Environment reset successfully")
+```
+
+### `step()`
+
+Perform a step in the environment.
+
+**Signature:** `step(action, data=None, reasoning=None)`
+
+**Parameters:**
+- `action` (`GameAction`): The game action to perform (e.g., `GameAction.ACTION1`, `GameAction.ACTION2`).
+- `data` (`dict[str, Any]`, optional): Optional action data dictionary. For complex actions, should contain `"x"` and `"y"` coordinates.
+- `reasoning` (`dict[str, Any]`, optional): Optional reasoning dictionary to include in recordings.
+
+**Returns:**
+- `FrameDataRaw` or `None`: `FrameDataRaw` object with updated game state, or `None` if step failed.
+
+**Example:**
+```python
+from arcengine import GameAction
+
+# Simple action
+obs = env.step(GameAction.ACTION1)
+
+# Complex action with coordinates
+obs = env.step(
+    GameAction.ACTION6,
+    data={"x": 32, "y": 32},
+    reasoning={"thought": "clicking center of screen"}
+)
+
+# Check game state after step
+if obs and obs.state == GameState.WIN:
+    print("Game won!")
+```

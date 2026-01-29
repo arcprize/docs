@@ -1,0 +1,55 @@
+---
+title: "Local vs Online"
+description: "Playing games locally with the engine vs online via the API"
+icon: "cloud"
+---
+
+Choose how you want to run ARC-AGI-3 games.
+
+<CardGroup cols={2}>
+  <Card title="Local (Recommended)" icon="computer" href="#local">
+    Fast, no rate limits, run many instances
+  </Card>
+  <Card title="Online" icon="cloud" href="#online">
+    Scorecards, replays, requires API key
+  </Card>
+</CardGroup>
+
+## Local
+
+Run games locally using the ARC-AGI engine. This is the recommended approach for development and testing.
+
+```python
+from arc_agi import Arcade, OperationMode
+
+arc = Arcade(operation_mode=OperationMode.OFFLINE)
+env = arc.make("ls20", render_mode="terminal")
+```
+
+| Advantages | Limitations |
+|------------|-------------|
+| ~2,000 FPS (120,000 frames per minute) | No online scorecards |
+| No rate limits | No shareable replays |
+| Run as many instances as you want | |
+| No API key required | |
+
+## Online
+
+Run games via the API to get scorecards and replays.
+
+```python
+from arc_agi import Arcade, OperationMode
+
+arc = Arcade(operation_mode=OperationMode.ONLINE)
+env = arc.make("ls20", render_mode="terminal")
+```
+
+| Advantages | Limitations |
+|------------|-------------|
+| View [scorecards](/scorecards) online | Requires [API key](/api-keys) |
+| Shareable [replays](/recordings) | Capped at [600 requests per minute](/rate_limits) |
+| Results appear on leaderboard | |
+
+## Learn More
+
+For all operation mode options and configuration details, see [operation_mode](/toolkit/arc_agi#operation_mode) in the Toolkit reference.

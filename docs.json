@@ -28,56 +28,132 @@
     "navigation": {
         "tabs": [
             {
-                "tab": "Documentation",
+                "tab": "Overview",
                 "groups": [
                     {
                         "group": "Get Started",
                         "pages": [
                             "index",
-                            "swarms"
+                            "api-keys"
                         ]
                     },
                     {
-                        "group": "Games",
+                        "group": "Core Concepts",
                         "pages": [
-                            "games",
-                            "scorecards",
-                            "actions",
-                            "recordings"
-                        ]
-                    },
-                    {
-                        "group": "Agents",
-                        "pages": [
-                            "agents-quickstart",
-                            "llm_agents",
                             {
-                                "group": "Partner Templates",
-                                "icon": "copy",
+                                "group": "Games",
+                                "icon": "gamepad-2",
                                 "pages": [
-                                    "partner_templates/agentops",
-                                    "partner_templates/huggingface",
-                                    "partner_templates/anthropic",
-                                    "partner_templates/langchain"
+                                    "game-schema",
+                                    "available-games",
+                                    "actions"
+                                ]
+                            },
+                            {
+                                "group": "Scoring",
+                                "icon": "trophy",
+                                "pages": [
+                                    "methodology",
+                                    "scorecards"
+                                ]
+                            },
+                            "recordings",
+                            {
+                                "group": "Agents",
+                                "icon": "bot",
+                                "pages": [
+                                    "agents-quickstart",
+                                    "llm_agents",
+                                    {
+                                        "group": "Partner Templates",
+                                        "icon": "copy",
+                                        "pages": [
+                                            "partner_templates/agentops",
+                                            "partner_templates/huggingface",
+                                            "partner_templates/anthropic",
+                                            "partner_templates/langchain"
+                                        ]
+                                    },
+                                    "create-agent"
                                 ]
                             }
                         ]
                     },
                     {
-                        "group": "Resources",
+                        "group": "Further Reading",
                         "pages": [
-                            "contributing"
+                            "local-vs-online",
+                            "full-play-test",
+                            "swarms"
+                        ]
+                    },
+                    {
+                        "group": "Learn More",
+                        "pages": [
+                            "arc-agi-3",
+                            "vocabulary"
+                        ]
+                    },
+                    {
+                        "group": "Community",
+                        "pages": [
+                            "feature-requests",
+                            "contributing",
+                            "changelog"
                         ]
                     }
                 ]
             },
             {
-                "tab": "API Guide",
+                "tab": "ARC-AGI Toolkit",
+                "groups": [
+                    {
+                        "group": "Get Started",
+                        "pages": [
+                            "toolkit/overview",
+                            "toolkit/minimal"
+                        ]
+                    },
+                    {
+                        "group": "Guides",
+                        "pages": [
+                            {
+                                "group": "Games",
+                                "pages": [
+                                    "toolkit/list-games",
+                                    "add_game",
+                                    "edit_games"
+                                ]
+                            },
+                            {
+                                "group": "Scorecards",
+                                "pages": [
+                                    "toolkit/get-scorecard",
+                                    "toolkit/create-scorecard",
+                                    "toolkit/close-scorecard"
+                                ]
+                            },
+                            "toolkit/list-actions",
+                            "toolkit/render-games"
+                        ]
+                    },
+                    {
+                        "group": "API Reference",
+                        "pages": [
+                            "toolkit/arc_agi",
+                            "toolkit/environment_wrapper"
+                        ]
+                    }
+                ]
+            },
+            {
+                "tab": "REST API",
                 "openapi": "arc3v1.yaml",
                 "groups": [
                     {
                         "group": "Using the API",
                         "pages": [
+                            "rest_overview",
                             "rate_limits"
                         ]
                     }

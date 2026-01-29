@@ -1,0 +1,11 @@
+---
+title: "Overview"
+description: "ARG AGI 3 Rest API Overview"
+icon: "file-text"
+---
+
+Programmatic interface for running agents against ARC‑AGI‑3 games, opening/closing score‑cards and driving game state with actions.
+All requests **require** an `X‑API‑Key` header issued from the ARC‑AGI‑3 web console.
+
+**Important: Session Affinity via Cookies**  
+Games are stateful and require session affinity. The server sets cookies (especially `AWSALB*` cookies) in responses that **must be included in all subsequent requests** for the same game session. These cookies route requests to the correct backend instance maintaining your game state. Most HTTP clients handle cookies automatically, but ensure your client preserves and sends cookies received from RESET and ACTION responses.

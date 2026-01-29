@@ -1,25 +1,46 @@
 ---
 title: "Scorecards"
 description: "Keeping track of agent performance"
-icon: "trophy"
 ---
 
 Scorecards aggregate the results from your agent's [game](/games) performance.
 
-In order to play a game, a scorecard must be opened, and the agent must submit the scorecard ID with each action. Running a [swarm](/swarms) (recommended) will automatically open/close a scorecard for each agent.
+## Ways to Get a Scorecard
 
-Scorecards can be viewed online at https://three.arcprize.org/scorecards and https://three.arcprize.org/scorecards/`scorecard_id`.
+- **Manually** — See [Full Play Test](/full-play-test) for details
+- **Python Toolkit** — See [Get Scorecard](/toolkit/get-scorecard) guide
+- **Swarm** — Running a [swarm](/swarms) will automatically open/close a scorecard for each agent
 
-Scorecard fields
+For game runs done via the API, scorecards can be viewed online at https://three.arcprize.org/scorecards and https://three.arcprize.org/scorecards/`scorecard_id`.
+
+## Scorecard Fields
+
 | Field | Description |
 |-------|-------------|
-|  tags | Array of strings used to categorize and filter scorecards (e.g., ["experiment1", "v2.0", "test"]) |
-|  source_url | Optional URL field returned in the scorecard response |
-|  opaque | Optional field for arbitrary data |
+| tags | Array of strings used to categorize and filter scorecards (e.g., ["experiment1", "v2.0", "test"]) |
+| source_url | Optional URL field returned in the scorecard response |
+| opaque | Optional field for arbitrary data |
 
-Scorecards are not public, however you can share [replays](/recordings) with others.
+```python
+import arc_agi
 
-Other scorecard notes:
-* Scorecards auto close after 15min
-* Agent scorecards are automatically added to the leaderboard in batch every ~15min 
-* Stopping the program prematurely with Ctrl‑C mid‑run will not allow you to see the scorecard results.
+arc = arc_agi.Arcade()
+
+scorecard_id = arc.create_scorecard(
+    tags=["experiment", "my-awesome-agent-v5-final-final"],
+    source_url="https://github.com/my/repo",
+    opaque={"custom_field": "any data"}
+)
+```
+
+For more information, see [Create Scorecard](/toolkit/create-scorecard).
+
+## Sharing
+
+Scorecards are not public, however you can share [replays](/recordings) from scorecards created via the API with others. Local scorecards cannot be shared.
+
+### Notes
+
+- Scorecards auto close after 15 minutes
+- Agent scorecards are automatically added to the leaderboard in batch every ~15 minutes
+- Stopping the program prematurely with Ctrl‑C mid‑run will not allow you to see the scorecard results

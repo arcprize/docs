@@ -1,0 +1,50 @@
+---
+title: "Close Scorecard"
+description: "How to close and finalize a scorecard using the ARC-AGI Toolkit"
+---
+
+## Overview
+
+When you're done with a scorecard, close it to finalize the results. This is important for proper tracking and leaderboard submission.
+
+## Closing the Default Scorecard
+
+If you're using the default scorecard, simply call `close_scorecard()`:
+
+```python
+import arc_agi
+
+arc = arc_agi.Arcade()
+env = arc.make("ls20", render_mode="terminal")
+
+# ... play games ...
+
+# Close and get final results
+final_scorecard = arc.close_scorecard()
+
+if final_scorecard:
+    print(f"Final score: {final_scorecard.score}")
+    print(final_scorecard.model_dump_json(indent=2))
+```
+
+After closing, a new default scorecard will be created on the next `make()` call.
+
+## Closing a Specific Scorecard
+
+If you created a custom scorecard, pass its ID:
+
+```python
+# Close a specific scorecard
+final_scorecard = arc.close_scorecard(scorecard_id="your-scorecard-id")
+```
+
+## Why Close Scorecards?
+
+- Scorecards auto-close after 15 minutes of inactivity
+- Closing ensures your results are finalized
+- Stopping your program with Ctrl-C without closing may prevent you from seeing results
+
+## Next Steps
+
+- [Get Scorecard](/toolkit/get-scorecard) — Retrieve scorecard results
+- [Create Scorecard](/toolkit/create-scorecard) — Create a custom scorecard

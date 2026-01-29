@@ -1,0 +1,22 @@
+---
+title: "REPL"
+description: "ARC-AGI REPL Python Example"
+icon: "python"
+---
+
+Get up and running with arc-agi in just 4 lines:
+
+```python
+import arc_agi
+from arcengine import GameAction
+arc = arc_agi.Arcade()
+env = arc.make("ls20", render_mode="terminal")
+```
+
+See the actions you can take, take one, and check your scorecard:
+
+```python
+print(env.action_space)
+obs = env.step(GameAction.ACTION1)
+print(arc.get_scorecard())
+```
