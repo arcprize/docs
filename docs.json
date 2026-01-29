@@ -88,12 +88,18 @@
                         ]
                     },
                     {
-                        "group": "Resources",
+                        "group": "Learn More",
                         "pages": [
-                            "vocabulary",
                             "arc-agi-3",
+                            "vocabulary"
+                        ]
+                    },
+                    {
+                        "group": "Community",
+                        "pages": [
                             "feature-requests",
-                            "contributing"
+                            "contributing",
+                            "changelog"
                         ]
                     }
                 ]
