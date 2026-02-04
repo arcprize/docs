@@ -134,7 +134,13 @@
                                     "toolkit/close-scorecard"
                                 ]
                             },
-                            "toolkit/list-actions",
+                            {
+                                "group": "Actions",
+                                "pages": [
+                                    "toolkit/list-actions",
+                                    "toolkit/submit-action"
+                                ]
+                            },
                             "toolkit/render-games"
                         ]
                     },
