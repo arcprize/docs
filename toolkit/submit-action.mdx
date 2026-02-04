@@ -1,0 +1,91 @@
+---
+title: "Submit Action"
+description: "How to submit actions and include reasoning logs using the ARC-AGI Toolkit"
+---
+
+## Overview
+
+Once you know which actions are available, you can submit them to the environment using the `step()` method on the `EnvironmentWrapper`. This method also supports including reasoning logs with each action.
+
+## Submitting a simple action
+
+Use the `step()` method to submit an action:
+
+```python
+from arcengine import GameAction
+
+# Submit a simple action
+obs = env.step(GameAction.ACTION1)
+
+# Check the result
+if obs:
+    print(f"Game state: {obs.state}")
+```
+
+## Submitting a complex action
+
+Complex actions require additional data, such as x,y coordinates:
+
+```python
+from arcengine import GameAction
+
+# Submit a complex action with coordinates
+obs = env.step(
+    GameAction.ACTION6,
+    data={"x": 32, "y": 32}
+)
+```
+
+## Including reasoning logs
+
+The `step()` method accepts an optional `reasoning` parameter that allows you to include reasoning metadata with each action. This is useful for tracking your agent's thought process in recordings.
+
+```python
+from arcengine import GameAction
+
+# Submit an action with reasoning logs
+obs = env.step(
+    GameAction.ACTION1,
+    reasoning={"thought": "Selecting this action because the pattern suggests a left shift"}
+)
+
+# Complex action with both data and reasoning
+obs = env.step(
+    GameAction.ACTION6,
+    data={"x": 32, "y": 32},
+    reasoning={
+        "thought": "clicking center of screen",
+        "confidence": 0.85,
+        "alternatives_considered": ["top-left", "bottom-right"]
+    }
+)
+```
+
+The reasoning dictionary can contain any key-value pairs you want to track. Common fields include:
+
+- `thought`: A description of why the action was chosen
+- `confidence`: A confidence score for the action
+- `alternatives_considered`: Other actions that were considered
+- `reasoning_tokens`: Token count from reasoning models
+
+## Checking the result
+
+After submitting an action, check the returned `FrameDataRaw` object:
+
+```python
+from arcengine import GameState
+
+obs = env.step(GameAction.ACTION1)
+
+if obs:
+    if obs.state == GameState.WIN:
+        print("Game won!")
+    elif obs.state == GameState.GAME_OVER:
+        print("Game over, resetting...")
+        env.reset()
+```
+
+## Next steps
+
+- [List available actions](./list-actions)
+- [Build a game-playing script](./minimal)
