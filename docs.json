@@ -112,7 +112,9 @@
                         "group": "Get Started",
                         "pages": [
                             "toolkit/overview",
-                            "toolkit/minimal"
+                            "toolkit/minimal",
+                            "toolkit/competition_mode",
+                            "toolkit/listen_and_serve"
                         ]
                     },
                     {

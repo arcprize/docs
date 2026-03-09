@@ -1,0 +1,27 @@
+---
+title: "Competition Mode"
+description: "Running in Competition Mode"
+---
+
+## Overview
+
+This mode is **REQUIRED** to show up on the Unverified leaderboard and forces the following behavior.
+
+- Environments must be interacted with via the API
+- Scoring is against all available environments, even if you choose not to interact with them
+- Only _Level Resets_ are premitted, _Game Resets_ are not allowed and become _Level Resets_
+- Can only interact (call `make`) a single time for each environment
+- Can only open a single Scorecard
+- Cannot get scoring of an inflight scorecard, `get_scorecard` does not work
+
+**Note:** The Kaggle Compeition is forced into this mode.
+
+### Example
+
+```
+from arc_agi import Arcade, OperationMode
+
+arc = Arcade(operation_mode=OperationMode.COMPETITION)
+```
+
+You can also set the ENVVAR of `OPERATION_MODE=COMPETITION`.
