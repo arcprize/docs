@@ -54,3 +54,28 @@ print(arc.get_scorecard())
 - [Minimal Example](./minimal) — A complete script example
 - [List Games](./list-games) — Discover available games
 - [Local vs Online](/local-vs-online) — Choose how to run games
+
+## Changelog
+## [0.9.3] - 2026-03-09
+
+### Added
+- `OperationMode.COMPETITION` method, see [Documentation](./competition_mode)
+- Official Scoring
+  - Average for an individual games is now weighted by the level index (1 indxed)
+  - Score for an individual level is now squared.  A score of `0.5` now becomes `0.25`
+
+### Fixed
+- Continued fixes for 404 Scorecard not found
+
+## [0.9.2] - 2026-02-26
+
+### Added
+- `listen_and_serve` method, see [Documentation](./listen_and_serve)
+
+### Fixed
+- 404 Scorecard not found about 50% of the time when in `ONLINE` mode
+- Game source being downloaded even if local copy already exists
+
+## [0.9.1] - 2026-01-29
+
+Initial Release
