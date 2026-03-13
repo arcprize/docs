@@ -113,7 +113,6 @@
                         "pages": [
                             "toolkit/overview",
                             "toolkit/minimal",
-                            "toolkit/competition_mode",
                             "toolkit/listen_and_serve"
                         ]
                     },
