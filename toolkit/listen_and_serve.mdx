@@ -10,7 +10,7 @@ Start a blocking Flask server that exposes the REST API. Uses `arc_agi.server.cr
 **Parameters:**
 - `host` (`str`, optional): Bind address. Default `"0.0.0.0"` to accept connections from any interface.
 - `port` (`int`, optional): Port to listen on. Default `8001`.
-- `competition_mode` (`bool`, optional): If `True`, enable competition mode. Default `False`.
+
 - `save_all_recordings` (`bool`, optional): If `True`, save recordings for all runs. Default `False`.
 - `add_cookie` (`Callable[[Response, str], Response]`, optional): Callback to inject a cookie into API responses. Receives `(response, api_key)`; must return the modified response. Use for session stickiness (e.g. ALB app cookies).
 - `scorecard_timeout` (`int`, optional): Idle timeout in seconds before scorecards are auto-closed. If set, starts a background cleanup loop.
