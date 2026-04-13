@@ -7,6 +7,10 @@ description: "Running the REST Endpoints to interact with Environments."
 
 Start a blocking Flask server that exposes the REST API. Uses `arc_agi.server.create_app()` under the hood.  This conforms to the [Rest API](https://docs.arcprize.org/rest_overview) to allow local execution for interactions with languages other than Python or with this Toolkit running in `ONLINE` mode.
 
+<Note>
+  This is how Kaggle runs your solution when you set `competition_mode=True`. Use `listen_and_serve` to set up your own server locally and replicate the Kaggle environment for development and testing.
+</Note>
+
 **Parameters:**
 - `host` (`str`, optional): Bind address. Default `"0.0.0.0"` to accept connections from any interface.
 - `port` (`int`, optional): Port to listen on. Default `8001`.
