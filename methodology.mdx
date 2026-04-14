@@ -23,12 +23,12 @@ Internal operations that do not alter the environment (tool calls, reasoning ste
 
 ## Human Baseline
 
-Human baselines are established through controlled testing where participants play each ARC-AGI-3 game for the first time (having never seen the game before). For each game, multiple first-time players are observed, and the **2nd best human** (fewest actions) per game is recorded as the baseline.
+Human baselines are established through controlled testing where participants play each ARC-AGI-3 game for the first time (having never seen the game before). For each game, multiple first-time players are observed, and the **median human** (by fewest actions) per level is recorded as the baseline.
 
-Using the 2nd best human:
+Using the median human per level:
 
-- Removes outlier winners while still representing proficient human performance
-- Avoids penalizing for early misclicks
+- Reflects typical proficient human performance rather than outlier runs
+- Reduces the impact of luck on any individual level
 - Keeps the baseline grounded in real play, not theoretical speed-runs
 
 ## How Scoring Works
@@ -47,21 +47,23 @@ level_score = (human_baseline_actions / ai_actions) ^ 2
 
 ### Per-Level Score Cap
 
-The maximum score per level is capped at **1.0x** human baseline. If an AI discovers a shortcut and completes a level faster than humans, it still only receives 1.0.
+The maximum score per level is capped at **1.15x** human baseline. If an AI discovers a shortcut and completes a level faster than humans, it can receive at most 1.15.
 
-This encourages building AI that **generalizes across games** rather than exploiting individual levels.
+This ensures a single subpar level does not disproportionately drag down the overall score for an AI that generalizes well across an entire game.
 
 ### Per-Game Aggregation
 
-The game score is the **weighted average** of all per-level scores, using a 1 index of the level as the weight, for that game.
+The game score is the **weighted average** of all per-level scores, using the 1-indexed level number as the weight. This underweights the starting tutorial/easy levels and overweights the more difficult later levels where mastery must be demonstrated.
 
-**Example:** A game has 7 levels. The AI scores:
-- Levels 1-3: 0.25 each (took twice as many actions as human)
-- Levels 4-7: 0 each (did not complete the level)
+The maximum game score is also determined by this weighted average structure — it is capped based on how many levels the AI actually completed. To unlock a maximum game score of 100%, the AI must complete all levels, including the final one.
 
-Game score = (0.25x1 + 0.25x2 + 0.5x3 + 0x4 + 0x5 + 0x6 + 0x7) / (1+2+3+4+5+6+7) = **0.01289 (1.29%)**
+**Example:** A game has 5 levels and the AI completes only the first 4:
 
-Per-level weighted average underweights the starting levels which are tutorial/easy levels and overweights the more difficult levels where mastery must be demonstrated.
+```
+max_game_score = (1 + 2 + 3 + 4) / (1 + 2 + 3 + 4 + 5) = 10 / 15 = 66.7%
+```
+
+No matter how efficiently the AI played levels 1–4, its game score cannot exceed 66.7%.
 
 ### Total Score
 
