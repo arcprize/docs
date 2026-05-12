@@ -62,7 +62,7 @@ echo 'ARC_API_KEY=your-api-key-here' > .env
 
 ### 3. Play your first game
 
-Create a file called `my-play.py`:
+Create a file called `play.py`:
 
 ```python
 import arc_agi
@@ -86,7 +86,7 @@ python play.py
 
 You should see the game render in your terminal and a scorecard with your results.
 
-🎉 Congratulations! You just played your first ARC-AGI-3 environment programatically.
+🎉 Congratulations! You just played your first ARC-AGI-3 environment programmatically.
 
 Do you feel the AGI yet?
 
@@ -95,6 +95,6 @@ Do you feel the AGI yet?
 After running your first environment:
 
 1. **Make it fast** - Use `env = arc.make("ls20")` without `render_mode` to hit +2K FPS
-1. **Try a different game** - Run `env = arc.make("ft09", render_mode="terminal")` to play a another game. See a list of games available at [arcprize.org/tasks](https://arcprize.org/tasks) or via the [ARC-AGI Toolkit](/toolkit/list-games)
+1. **Try a different game** - Run `env = arc.make("ft09", render_mode="terminal")` to play another game. See a list of games available at [arcprize.org/tasks](https://arcprize.org/tasks) or via the [ARC-AGI Toolkit](/toolkit/list-games)
 2. **Use an agent** - Explore [agent templates](/llm_agents) or [create your own agent](/agents-quickstart).
 4. **Explore the ARC-AGI Toolkit** - [The ARC-AGI Toolkit](./toolkit/overview) allows quick and easy integration with ARC-AGI Environments.
