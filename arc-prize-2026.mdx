@@ -1,0 +1,53 @@
+---
+title: "ARC Prize 2026"
+sidebarTitle: "ARC Prize 2026"
+description: "Starter notebook for the ARC Prize 2026 Kaggle competition."
+icon: "trophy"
+---
+
+The [ARC-AGI-3 Kaggle Starter](https://github.com/arcprize/ARC-AGI-3-Kaggle-Starter) repository is the recommended jumping-off point for the [ARC Prize 2026](https://arcprize.org) Kaggle competition. It provides a Kaggle notebook that wires the [ARC-AGI Toolkit](/toolkit/overview) into the Kaggle submission flow so you can iterate locally and then submit the same notebook to the competition.
+
+Repository: [github.com/arcprize/ARC-AGI-3-Kaggle-Starter](https://github.com/arcprize/ARC-AGI-3-Kaggle-Starter)
+
+## What you get
+
+- A ready-to-run Kaggle notebook that plays ARC-AGI-3 environments end-to-end.
+- A local test path so you can validate your agent before submitting.
+- A submission path that runs the same notebook inside the Kaggle competition environment (which forces [Competition Mode](/toolkit/competition_mode)).
+
+## Prerequisites
+
+- An [ARC-AGI-3 API key](/api-keys).
+- A Kaggle account and a [Kaggle API key](https://www.kaggle.com/docs/api) (`kaggle.json`). You need this before you can pull the starter, run it locally against Kaggle, or submit to the competition.
+- Python `3.9+` and the [ARC-AGI Toolkit](/toolkit/overview) (`pip install arc-agi`).
+
+## Quickstart
+
+Follow the README in the starter repo for the canonical instructions. The high-level flow is:
+
+<Steps>
+  <Step title="Clone the starter">
+    ```bash
+    git clone https://github.com/arcprize/ARC-AGI-3-Kaggle-Starter.git
+    cd ARC-AGI-3-Kaggle-Starter
+    ```
+  </Step>
+  <Step title="Add your Kaggle API key">
+    Download `kaggle.json` from your Kaggle account settings and place it at `~/.kaggle/kaggle.json` (Linux/macOS) or `%USERPROFILE%\.kaggle\kaggle.json` (Windows). Then restrict permissions:
+
+    ```bash
+    chmod 600 ~/.kaggle/kaggle.json
+    ```
+  </Step>
+  <Step title="Test locally">
+    Run the notebook locally to validate your agent against the ARC-AGI-3 environments. This uses the Toolkit's [`listen_and_serve`](/toolkit/listen_and_serve) flow to replicate how Kaggle will run your solution.
+  </Step>
+  <Step title="Submit to the competition">
+    Once you're happy with local results, push the notebook to Kaggle and submit it to the [ARC Prize 2026 competition](https://arcprize.org).
+  </Step>
+</Steps>
+
+## Notes
+
+- The Kaggle competition is forced into [Competition Mode](/toolkit/competition_mode): only level resets are permitted, you can only `make` each environment once, and only a single scorecard is opened for the run.
+- Use [`listen_and_serve`](/toolkit/listen_and_serve) locally with `competition_mode=True` to mirror the Kaggle environment exactly.
