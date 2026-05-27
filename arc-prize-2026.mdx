@@ -1,0 +1,157 @@
+---
+title: "ARC Prize 2026"
+sidebarTitle: "ARC Prize 2026"
+description: "Local dev starter kit for the ARC Prize 2026 Kaggle competition."
+icon: "trophy"
+---
+
+The [ARC-AGI-3 Kaggle Starter](https://github.com/arcprize/ARC-AGI-3-Kaggle-Starter) is a local dev kit for the [ARC Prize 2026 - ARC-AGI-3](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3) Kaggle competition. You edit one Python file on your laptop, see it play the real game environments locally, and push it to Kaggle as a submission with a single command.
+
+Repository: [github.com/arcprize/ARC-AGI-3-Kaggle-Starter](https://github.com/arcprize/ARC-AGI-3-Kaggle-Starter)
+
+## Prerequisites
+
+- **Python 3.12** (the competition's `arc-agi` package requires it)
+  - macOS: `brew install python@3.12`
+  - Ubuntu: `sudo apt install python3.12 python3.12-venv`
+  - Windows: install from [python.org](https://www.python.org/downloads/)
+- **A Kaggle account** with the competition rules accepted ([accept here](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/rules)).
+- **A Kaggle API token** created at [Kaggle Settings → Create New Token](https://www.kaggle.com/settings). You'll drop it into the project (no `~/.kaggle/kaggle.json` required).
+
+No GPU is required for the starter agent.
+
+## Quick start
+
+```bash
+# 1. Clone the starter
+git clone https://github.com/arcprize/ARC-AGI-3-Kaggle-Starter.git
+cd ARC-AGI-3-Kaggle-Starter
+
+# 2. Drop your Kaggle API token into the project-local .kaggle/ folder
+#    (NOT your home directory)
+mkdir -p .kaggle && echo "KGAT_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" > .kaggle/access_token
+chmod 600 .kaggle/access_token
+
+# 3. One-time setup: venv, dependencies, framework
+make setup
+
+# 4. Edit agent/my_agent.py. This is the only file you change.
+
+# 5. Run it locally against every game (seconds)
+make play-local
+
+# 6. Push it to Kaggle as a submission notebook
+make submit
+
+# 7. Watch the run
+make status
+```
+
+When `make status` shows `complete`, open the notebook on [kaggle.com](https://www.kaggle.com), find your kernel, click **Submit to Competition** in the top right, and pick `submission.parquet` from the Output File dropdown.
+
+Steps 4-7 are the iteration loop; clicking *Submit to Competition* is the deliberate moment you spend a daily submission.
+
+## The one file you edit: `agent/my_agent.py`
+
+This is the only file you normally touch. It defines a `MyAgent` class with two methods:
+
+```python
+class MyAgent(Agent):
+    def is_done(self, frames, latest_frame) -> bool:
+        """Return True when your agent wants to stop playing."""
+        ...
+
+    def choose_action(self, frames, latest_frame) -> GameAction:
+        """Look at the game state and return the next action."""
+        ...
+```
+
+The starter picks random actions, a baseline that proves your pipeline works end-to-end. Replace the body of `choose_action` with your strategy. Kaggle plumbing, submission file format, and game orchestration are all handled for you.
+
+## What happens when you run `make submit`
+
+The competition is a **code competition**: you submit a notebook, Kaggle runs it twice.
+
+1. **Phase A: Save & Run All.** Kaggle runs your notebook in their real environment and validates that the code executes without errors. `make status` will report `complete`.
+2. **Phase B: Competition Rerun.** Triggered when you click **Submit to Competition** on the kernel page. Your agent plays the hidden game set and your leaderboard score appears.
+
+<Note>
+Before your first `make submit`, open `notebooks/kernel-metadata.json` and replace `REPLACE_WITH_YOUR_USERNAME` with your Kaggle handle. The Makefile will refuse to push until you do.
+</Note>
+
+### Choosing an accelerator
+
+The notebook is generated with a **T4 GPU** by default (matches Kaggle's sample submission). To change it, open `scripts/build_notebook.py` and edit one line near the top:
+
+```python
+ACCELERATOR = "t4"     # one of: cpu, t4, p100, rtx6000
+```
+
+Re-run `make submit`. Both the notebook metadata and `notebooks/kernel-metadata.json` get updated automatically.
+
+| Value | Hardware | When to use |
+| --- | --- | --- |
+| `"cpu"` | No GPU | The random starter, or any non-ML agent |
+| `"t4"` | Nvidia T4 ×2 | **Default.** Small models, fast iteration |
+| `"p100"` | Nvidia P100 | Single big-memory GPU |
+| `"rtx6000"` | Nvidia RTX 6000 (`g4-standard-48`) | Heavy ML; **ARC-AGI-3 exclusive**, burns GPU quota faster |
+
+RTX 6000 is reserved for ARC-AGI-3 notebooks. Don't use it for early iteration. All accelerated Kaggle sessions have internet disabled, which is already the default in this kit.
+
+## All the commands
+
+| Command | What it does |
+| --- | --- |
+| `make setup` | One-time install: Python venv, `arc-agi`, `kaggle` CLI, clones the framework |
+| `make play-local` | Runs your agent against every game in the dataset, locally |
+| `make play-local GAME=ls20` | Same, but only one game (faster while debugging) |
+| `make verify-local` | 30-second smoke test on two games |
+| `make list-games` | Print every game id available |
+| `make pull-sample` | Download the official sample agent for reference |
+| `make notebook` | Build the Kaggle notebook from your agent (no push) |
+| `make submit` | Build the notebook **and** push it to Kaggle |
+| `make status` | Check the status of your most recent Kaggle run |
+| `make clean` | Remove the venv, downloads, and generated notebook |
+
+## Why this setup instead of editing in the Kaggle notebook?
+
+1. **Iteration speed.** Editing in your IDE then running `make play-local` gives you a real-game-engine feedback loop in seconds. Kaggle's editor loop is *minutes* per change.
+2. **No environment surprises.** The local `arc-agi` PyPI package hosts the same game engine the Kaggle gateway runs. If it works locally, it works on Kaggle.
+3. **Your code stays in git.** Notebooks are awful for diffs and code review. Your real work lives in `agent/my_agent.py`; the notebook is an auto-generated deployment artifact.
+
+## Project layout
+
+```
+.
+├── agent/
+│   └── my_agent.py             ★ The file you edit
+├── scripts/
+│   ├── play_local.py           Runs your agent against real games
+│   ├── build_notebook.py       Packages your agent into a Kaggle notebook
+│   └── slim_framework.py       Trims framework deps so install is light
+├── notebooks/
+│   ├── kernel-metadata.json    Edit once: your Kaggle username
+│   └── submission.ipynb        Auto-generated, never edit by hand
+├── vendor/                     Cloned framework (gitignored)
+├── .venv/                      Python 3.12 venv (gitignored)
+├── .kaggle/                    Your project-local Kaggle token (gitignored)
+└── Makefile
+```
+
+## Troubleshooting
+
+**`make setup` fails: `python3.12: command not found`.** Install Python 3.12; the `arc-agi` package requires it. macOS: `brew install python@3.12`.
+
+**`make submit` says "edit kernel-metadata.json".** You haven't replaced `REPLACE_WITH_YOUR_USERNAME` in `notebooks/kernel-metadata.json` yet.
+
+**`make submit` says `401 Unauthorized`.** Your Kaggle token is missing or invalid. Generate a fresh one from your [Kaggle Settings page](https://www.kaggle.com/settings) and overwrite `.kaggle/access_token`.
+
+**`make play-local` says "Could not create environment".** Your machine couldn't reach the ARC-AGI API to download the game source on first run. Check your internet, then try again. Once downloaded, games are cached in `environment_files/` and you're fully offline.
+
+**My local score is 0.0.** That's expected for the random starter agent. Your job is to make it non-zero.
+
+## Where to go next
+
+- Read the rest of the [ARC-AGI-3 docs](/) to understand the benchmark.
+- Run `make pull-sample` to study Kaggle's reference agent.
+- Join the competition's [discussion forum](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion) for community Q&A.
