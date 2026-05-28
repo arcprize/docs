@@ -51,7 +51,7 @@ level_score = (human_baseline_actions / ai_actions) ^ 2
 
 The maximum score per level is capped at **1.15x** human baseline. If an AI discovers a shortcut and completes a level faster than humans, it can receive at most 1.15.
 
-This ensures a single subpar level does not disproportionately drag down the overall score for an AI that generalizes well across an entire game.
+This keeps any single level from dominating the overall game score, so the score reflects consistent performance rather than one standout run.
 
 ### Per-Game Aggregation
 
