@@ -72,7 +72,8 @@
                                             "partner_templates/agentops",
                                             "partner_templates/huggingface",
                                             "partner_templates/anthropic",
-                                            "partner_templates/langchain"
+                                            "partner_templates/langchain",
+                                            "partner_templates/gpt-oss-kaggle"
                                         ]
                                     },
                                     "create-agent"

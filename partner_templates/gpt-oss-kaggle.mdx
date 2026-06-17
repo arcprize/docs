@@ -1,0 +1,55 @@
+---
+title: "GPT OSS on Kaggle"
+sidebarTitle: "GPT OSS on Kaggle"
+description: "Run a GPT-OSS-120B agent against ARC-AGI-3 on Kaggle"
+icon: "container"
+---
+
+This template runs [GPT-OSS-120B](https://huggingface.co/openai/gpt-oss-120b) as an LLM-guided agent against ARC-AGI-3, hosted on Kaggle so you can use the competition's RTX Pro 6000 accelerator.
+
+Notebook: https://www.kaggle.com/code/gregkamradt/arc-agi-3-gpt-oss-120b
+
+<Warning>
+  The model runs **slowly** on the RTX hardware available in this environment, so you won't want to rely on it for every decision. Instead, pull from it selectively for the moments where you actually need LLM-guided reasoning.
+</Warning>
+
+## Key parameters to tune
+
+All of these live inside `MyAgent` in the notebook:
+
+- **`MAX_ACTIONS`** (e.g. `50`) — the number of actions the agent takes per game. This is the single best knob to tune.
+- **`MESSAGE_LIMIT`** (e.g. `2`) — how many past steps are sent to the model. We keep this low (`2`) because the context window fills up quickly with the JSON grid for each frame.
+- **`GAME_TIME_LIMIT_S`** — the per-game time limit. Keep this **low**. If it's too high you'll hit a `scorecard not produced in time` error, which fails the run.
+- **`MAX_MODEL_LEN`** — the model's context length.
+- **`build_user_prompt`** — the function that assembles the prompt sent to the model. Fun to experiment with for better guidance.
+
+## Test locally on one game
+
+Before submitting, confirm a single game runs end-to-end:
+
+- Use **Save & Run All (Commit)** to run the notebook end-to-end in local mode.
+
+This verifies the full loop works before you spend a competition submission on it.
+
+## Submit to the competition
+
+<Steps>
+  <Step title="Make your change">
+    Edit the agent or parameters above to whatever you want to test.
+  </Step>
+  <Step title="Enable the accelerator">
+    Set the accelerator to **RTX Pro 6000** in the notebook settings.
+  </Step>
+  <Step title="(Optional) Run All for quick experiments">
+    If you don't need to save a version, just use **Run All**. This is quicker-ish than a save and commit and is handy for iterating on experiments.
+  </Step>
+  <Step title="Save & Run All (Commit)">
+    Once you're happy with an intermediate result, use **Save & Run All (Commit)** and give it a clear version name.
+  </Step>
+  <Step title="Submit to competition">
+    When the commit finishes, submit in one of two ways:
+
+    - Open the version you just saved and click **Submit to Competition**, or
+    - Go to your **Completed Notebooks**, select the version you want, and click **Submit to Competition**.
+  </Step>
+</Steps>
