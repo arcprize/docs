@@ -1,0 +1,45 @@
+---
+title: "Scoring Methodology"
+sidebarTitle: "Scoring"
+description: "How the ARC-AGI-3 score is calculated"
+icon: "trophy"
+mode: "wide"
+---
+
+ARC-AGI-3 prioritizes learning efficiency in unfamiliar games through a scoring
+metric called **Relative Human Action Efficiency** (RHAE, pronounced "ray").
+
+RHAE measures per-level action efficiency relative to a human baseline. Scores are normalized per game, then averaged across all games.
+
+The procedure can be summarized as follows:
+
+<Steps>
+  <Step title="Level score">
+    If an agent does not complete a level, its score for that level is 0%. If it completes the level, its action count
+    is compared against a human baseline.
+    The baseline is the median action count among human finishers. When there is an even number of finishers, the higher of the two middle counts is used.
+
+    The level score is then calculated by dividing the human baseline by the agent's action count, squaring the result, and capping it at 115%.
+
+    For example, if the baseline is 50 actions and the agent takes 100 actions to beat the level,
+    its level score is (50 / 100)² = 25%.
+  </Step>
+  <Step title="Game score">
+    Each level is scored independently, and the game score is the weighted average of all level scores.
+    Weights correspond to each level's number, so for a five-level game the weights are 1 through 5, summing to 15.
+    In this example, the first level's score carries 1/15 of the total weight.
+
+    The game score is then capped at 100% to prioritize generality.
+  </Step>
+  <Step title="Final benchmark score">
+    Average the individual game scores to obtain a final benchmark score ranging from 0% to 100%.
+  </Step>
+</Steps>
+
+## What This Methodology Gives Us
+
+- **Efficiency:** Rewards learning through a small number of highly informative actions and heavily penalizes brute-force trial and error.
+- **Human comparison:** Measures action efficiency directly against successful human participants.
+- **Limited outlier influence:** The human median reduces sensitivity to exceptional runs; the caps on agent scores reward consistent performance.
+- **Room for variation:** Above-human efficiency on some levels can offset modest inefficiency on other levels within the same game.
+- **Generality:** The 100% game cap prevents exceptional results in one game from compensating for weaknesses elsewhere. A perfect benchmark score requires completing every level and matching or exceeding human efficiency in every game.

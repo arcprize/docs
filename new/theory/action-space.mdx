@@ -1,0 +1,66 @@
+---
+title: "Action Space"
+sidebarTitle: "Action Space"
+description: "Explanation of all agent actions available in ARC-AGI-3"
+icon: "gamepad-directional"
+mode: "wide"
+---
+
+After receiving an [observation](/theory/observations), the agent chooses an action. The environment processes it and returns the next observation.
+The set of actions a game supports is its **action space**.
+
+All games draw from the same controls: a reset action and seven numbered actions. Each game supports a subset of the numbered actions,
+so an agent might encounter a game controlled by directions, mouse clicks, or a combination of both.
+
+## Available Actions
+
+| Action | Meaning |
+|---|---|
+| `RESET`   | Resets the game (during competition) or the level (during development). |
+| `ACTION1` | Directional action associated with up. |
+| `ACTION2` | Directional action associated with down. |
+| `ACTION3` | Directional action associated with left. |
+| `ACTION4` | Directional action associated with right. |
+| `ACTION5` | A game-specific special action, such as interacting, rotating, or confirming a choice. |
+| `ACTION6` | A mouse click at a chosen position on the grid. This action is considered "complex" as opposed to all others, that are "simple".|
+| `ACTION7` | Undo action. |
+
+The controls are shared across games, but their effects depend on each game's mechanics. An agent must discover what an action does
+by trying it and observing the result.
+
+<Info>
+A game's action space stays constant for each game.
+</Info>
+
+---
+
+## Choosing Where to Click
+
+Most actions need only to get selected to take effect, but a mouse click also requires a position: an **x coordinate** and a **y coordinate**, each from 0 to 63.
+
+- **x** specifies the column, increasing from left to right.
+- **y** specifies the row, increasing from top to bottom.
+- **(0, 0)** is the top-left cell; **(63, 63)** is the bottom-right cell.
+
+This means that a click represents a choice among 4096 grid positions.
+The agent is only told whether clicking is supported, but must discover where it makes sense to click by itself.
+
+For example, knowing that a game supports clicks does not reveal whether a specific cell is a valid destination.
+Those relationships have to be learned.
+
+---
+
+## Reset Action
+
+`RESET` is an always-available action for resetting the game, that is not included in the game's specific action space.
+
+After `GAME_OVER` game state, play can only resume through a reset action.
+
+The scope of a reset depends on the setting:
+
+- **During development:** A reset can restart the current level.
+- **During competition:** A reset restarts the entire game from level 1.
+
+<Info>
+In competition, reaching a later level does not allow the agent to retry that level in isolation. After a reset, it must start from the very beginning.
+</Info>

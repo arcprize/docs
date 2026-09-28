@@ -1,0 +1,143 @@
+---
+title: "Observations - Agent Input Space"
+sidebarTitle: "Observations"
+description: "Conceptual explanation of what information is provided by each environment"
+icon: "eye"
+mode: "wide"
+---
+
+At every step of ARC-AGI-3, the environment provides an agent with an observation. This contains the visual state of the environment
+alongside information about the game's status, progress through its levels, and available actions.
+
+## Game Frames
+
+The main part of an observation is one or more game frames: 2D grids of colored cells, with each color represented by an index number from the official palette.
+
+<Columns cols={2}>
+  <Column>
+    <img
+      src="/media/do22-level5.png"
+      alt="Example ARC-AGI-3 frame"
+      style={{ margin: 0 }}
+    />
+  </Column>
+
+  <Column>
+    <div className="grid grid-cols-4 gap-2 w-full aspect-square">
+    <div aria-label="Color 0" className="arc-color border border-gray-300 bg-[#FFFFFF]">
+      <span>0</span>
+    </div>
+    <div aria-label="Color 1" className="arc-color bg-[#CCCCCC]">
+      <span>1</span>
+    </div>
+    <div aria-label="Color 2" className="arc-color bg-[#999999]">
+      <span>2</span>
+    </div>
+    <div aria-label="Color 3" className="arc-color bg-[#666666]">
+      <span>3</span>
+    </div>
+    <div aria-label="Color 4" className="arc-color bg-[#333333]">
+      <span>4</span>
+    </div>
+    <div aria-label="Color 5" className="arc-color bg-[#000000]">
+      <span>5</span>
+    </div>
+    <div aria-label="Color 6" className="arc-color bg-[#E53AA3]">
+      <span>6</span>
+    </div>
+    <div aria-label="Color 7" className="arc-color bg-[#FF7BCC]">
+      <span>7</span>
+    </div>
+    <div aria-label="Color 8" className="arc-color bg-[#F93C31]">
+      <span>8</span>
+    </div>
+    <div aria-label="Color 9" className="arc-color bg-[#1E93FF]">
+      <span>9</span>
+    </div>
+    <div aria-label="Color 10" className="arc-color bg-[#88D8F1]">
+      <span>10</span>
+    </div>
+    <div aria-label="Color 11" className="arc-color bg-[#FFDC00]">
+      <span>11</span>
+    </div>
+    <div aria-label="Color 12" className="arc-color bg-[#FF851B]">
+      <span>12</span>
+    </div>
+    <div aria-label="Color 13" className="arc-color bg-[#921231]">
+      <span>13</span>
+    </div>
+    <div aria-label="Color 14" className="arc-color bg-[#4FCC30]">
+      <span>14</span>
+    </div>
+    <div aria-label="Color 15" className="arc-color bg-[#A356D6]">
+      <span>15</span>
+    </div>
+  </div>
+  </Column>
+</Columns>
+
+<p className="text-center text-sm text-gray-500">
+An example DO22 game frame alongside the ARC-AGI color palette.
+</p>
+
+### Frame Grid Structure
+
+- **Dimensions:** 64⨯64
+- **Cell Values:** Integer values 0-15 representing colors from the palette above.
+- **Coordinate System:** (0, 0) at the top-left, with x increasing to the right and y increasing downward.
+
+### Multi-frame Animations
+
+An action can produce a single frame or an animation, such as an object sliding across the grid.
+The observation includes the frames from that action in chronological order, before the agent chooses its next action:
+
+- **Instant actions:** Produce a single frame showing the result.
+- **Animation-triggering actions:** Produce a sequence of frames showing the transition.
+
+<Tip>
+For simplicity, many agents only use the newest frame and discard the intermediate ones.
+However, if your agent can make use of seeing the animation - feel free to process all frames.
+</Tip>
+
+---
+
+## Additional Metadata
+Alongside the frames, each observation includes information about the game's status, progress, and available actions.
+
+### Game State
+At every step, a game is in one of four states:
+
+| State | Description |
+|---|---|
+| `NOT_PLAYED`    | No game has been started |
+| `NOT_FINISHED`  | The game is active and awaiting another action |
+| `WIN`           | All required levels were completed successfully |
+| `GAME_OVER`     | The run ended without a win |
+
+### Level & Progress
+
+Because each environment has multiple levels, the environment informs the agent at every step how many levels
+it has completed and how many are required to win the game.
+
+| Information | Description |
+|---|---|
+| Levels completed        | How many levels the agent has solved in the current run, starting at zero. |
+| Levels required to win  | How many levels the agent must complete to win the game. |
+
+Each time the agent clears a level, the number of completed levels increases. Once it has completed all required levels,
+the game state changes to `WIN`.
+
+### Available Actions (Action Space)
+Each observation also includes a list of available actions.
+
+<Note>This list is constant for each game; it does not indicate which actions advance the game at the moment.
+For example, a movement action remains available even when a wall blocks movement, and attempting it still counts as an action.</Note>
+
+Depending on the game, these actions might include up, down, left and right movements, special actions, a mouse click, and even an undo action.
+All actions are described in greater detail in the [Action Space](/theory/action-space) page.
+
+---
+
+This was an overview of information contained in observations.
+Specific field names and data types depend on the tools you use,
+that are all described in the [Tools Overview](/tools/tools-overview) and then in each tool's specific documentation.

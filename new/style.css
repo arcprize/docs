@@ -1,0 +1,17 @@
+.arc-color {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1;
+  border-radius: 0.375rem;
+}
+
+.arc-color > span {
+  color: black;
+  font-size: 1.5rem;
+  font-weight: 800;
+}
+
+.arc-color[aria-label="Color 5"] > span {
+  color: white;
+}

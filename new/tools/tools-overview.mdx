@@ -1,0 +1,62 @@
+---
+title: "Tools Overview"
+sidebarTitle: "Overview"
+description: "Summary of all the official tools for ARC-AGI-3"
+icon: "wrench"
+mode: "wide"
+---
+
+The official ARC-AGI-3 tools support building agents, testing them against games, and submitting them to the
+[ARC Prize competition on Kaggle](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3).
+This overview describes all official tools, starting from the most complete one.
+
+All repositories are open source, so you can inspect how each of them works.
+
+
+## ARC-AGI-3-Kaggle-Starter
+<GitHub.Repo repo="arcprize/ARC-AGI-3-Kaggle-Starter" variant="flat"/>
+
+The [Kaggle Starter](https://github.com/arcprize/ARC-AGI-3-Kaggle-Starter) brings local development and Kaggle submission into one project.
+Start here if you want to build an agent and enter the competition.
+
+It includes a working random agent, scripts for testing your agent locally on public games, and utilities for packaging
+your code into a Kaggle notebook, uploading it, and checking its run status. You can focus on improving the agent's decisions
+while the starter handles the surrounding setup. The final competition submission is made through Kaggle after the notebook finishes running.
+
+Internally, the starter uses **ARC-AGI-3-Agents** as its agent framework.
+
+
+## ARC-AGI-3-Agents
+<GitHub.Repo repo="arcprize/ARC-AGI-3-Agents" variant="flat"/>
+
+[ARC-AGI-3-Agents](https://github.com/arcprize/ARC-AGI-3-Agents) provides the structure for building and running agents.
+It includes an agent base class, example agents, and utilities for running agents across all benchmark games and recording their play.
+
+You supply the logic that chooses actions and decides when to stop, while the framework manages the interaction loop around those decisions.
+You can use this repository directly to experiment with agents outside the Kaggle Starter workflow, for example to focus on development without
+focusing on making official competition submissions.
+
+To communicate with the environments, the framework uses the **ARC-AGI Toolkit**.
+
+
+## ARC-AGI Toolkit
+<GitHub.Repo repo="arcprize/ARC-AGI" variant="flat"/>
+
+The [ARC-AGI Toolkit](https://github.com/arcprize/ARC-AGI) is the Python interface for interacting with ARC-AGI-3 environments.
+It handles finding and initializing games, sending actions, receiving observations, and managing scorecards.
+
+For online play, it sends API requests to the servers hosting the games. It also supports downloading available games and running them
+locally, with a common interface for both modes. You can use the toolkit directly if you want to interact with individual ARC-AGI-3 games directly.
+
+The games themselves are built on **ARCEngine**.
+
+
+## ARCEngine
+<GitHub.Repo repo="arcprize/ARCEngine" variant="flat"/>
+
+[ARCEngine](https://github.com/arcprize/ARCEngine) is the Python game engine that ARC-AGI-3 games are built on.
+It provides the building blocks for sprites, levels, collisions, and rendering,
+along with all the machinery that processes actions and produces game frames.
+
+Explore this repository if you want to understand how the environments work internally or build your own games.
+

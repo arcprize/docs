@@ -1,0 +1,59 @@
+{
+    "$schema": "https://mintlify.com/docs.json",
+    "theme": "mint",
+    "name": "ARC-AGI-3 Docs",
+    "colors": {
+        "primary": "#ff0000"
+    },
+    "appearance": {
+        "default": "dark"
+    },
+    "favicon": "/media/favicon.png",
+    "icons": {
+        "library": "lucide"
+    },
+    "contextual": {
+        "options": [
+            "copy",
+            "view",
+            "chatgpt",
+            "claude"
+        ]
+    },
+    "logo": {
+        "light": "/media/arc-prize-logo_light.png",
+        "dark": "/media/arc-prize-logo_dark.png",
+        "href": "https://arcprize.org"
+    },
+    "navigation": {
+        "tabs": [
+            {
+                "tab": "Overview",
+                "groups": [
+                    {
+                        "group": "Get Started",
+                        "pages": [
+                            "get-started/arc-agi-3-overview",
+                            "get-started/how-to-participate"
+                        ]
+                    },
+                    {
+                        "group": "Theory",
+                        "pages": [
+                            "theory/intro-to-games",
+                            "theory/observations",
+                            "theory/action-space",
+                            "theory/scoring"
+                        ]
+                    },
+                    {
+                        "group": "Tools",
+                        "pages": [
+                            "tools/tools-overview"
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}
